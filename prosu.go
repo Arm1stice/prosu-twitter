@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/gobuffalo/packr"
+	"github.com/gorilla/context"
 	"github.com/joho/godotenv"
 	"github.com/op/go-logging"
 	redistore "gopkg.in/boj/redistore.v1"
@@ -54,6 +55,9 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Get("/", homePage)
+
+	/* Listen */
+	http.ListenAndServe(":8080", context.ClearHandler(r))
 }
 
 // When someone visits the home page
@@ -62,6 +66,9 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	if sessionError != nil {
 		log.Error("There was an error getting the user's session")
 	}
+	session.Save(r, w)
+
+	fmt.Fprintf(w, "Hello")
 }
 
 func setupSessionStore() *redistore.RediStore {

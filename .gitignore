@@ -1,0 +1,4 @@
+*.log
+.env
+.vagrant/*
+prosu-go*
