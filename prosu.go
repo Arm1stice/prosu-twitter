@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/gobuffalo/packr"
 	"github.com/gorilla/context"
 	"github.com/joho/godotenv"
 	"github.com/op/go-logging"
@@ -20,11 +19,8 @@ var format = logging.MustStringFormatter(
 	`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`,
 )
 
-/* Set up packr box */
-var box = packr.NewBox("./views")
-
 /* Set up session store */
-var sessionStore = setupSessionStore()
+var sessionStore *redistore.RediStore
 
 func main() {
 	/* First, setting up logging */
@@ -43,6 +39,9 @@ func main() {
 		}
 	}
 
+	// Initialize sessionStore
+	sessionStore = setupSessionStore()
+
 	/* Set up chi router */
 	// Initialize the router
 	r := chi.NewRouter()
@@ -55,7 +54,7 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Get("/", homePage)
-
+	r.Get("/favicon.ico", serveFavicon)
 	/* Listen */
 	http.ListenAndServe(":8080", context.ClearHandler(r))
 }
@@ -69,6 +68,11 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	session.Save(r, w)
 
 	fmt.Fprintf(w, "Hello")
+}
+
+// Serve the favicon
+func serveFavicon(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "static/favicon.ico")
 }
 
 func setupSessionStore() *redistore.RediStore {
