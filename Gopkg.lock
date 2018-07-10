@@ -20,12 +20,6 @@
   version = "v3.3.2"
 
 [[projects]]
-  name = "github.com/gobuffalo/packr"
-  packages = ["."]
-  revision = "bd47f2894846e32edcf9aa37290fef76c327883f"
-  version = "v1.11.1"
-
-[[projects]]
   name = "github.com/gorilla/context"
   packages = ["."]
   revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
@@ -56,12 +50,6 @@
   version = "v1"
 
 [[projects]]
-  name = "github.com/pkg/errors"
-  packages = ["."]
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
-
-[[projects]]
   name = "gopkg.in/boj/redistore.v1"
   packages = ["."]
   revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
@@ -70,6 +58,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "57001091edaefa024132cb130d0379157db47dbf12b50180acc49e810920b6a9"
+  inputs-digest = "8577373bd3549bcb4487ad035b210addb476b8306bb648c4dfa4833a677d7adf"
   solver-name = "gps-cdcl"
   solver-version = 1
