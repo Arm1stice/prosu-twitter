@@ -29,8 +29,8 @@
   go-tests = true
   unused-packages = true
 
-metadata.heroku['root-package'] 
-  "github.com/wcalandro/prosu-go"
+[metadata.heroku]
+  root-package = "github.com/wcalandro/prosu-go"
 
 [[constraint]]
   name = "github.com/joho/godotenv"
