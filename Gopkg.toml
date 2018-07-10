@@ -31,6 +31,8 @@
 
 [metadata.heroku]
   root-package = "github.com/wcalandro/prosu-go"
+  go-version = "go1.10.3
+  pkg-spec = "."
 
 [[constraint]]
   name = "github.com/joho/godotenv"
