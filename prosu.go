@@ -49,6 +49,8 @@ func main() {
 		} else {
 			log.Info("Successfully loaded .env file")
 		}
+	} else {
+		log.Debug("Production environment, not loading .env")
 	}
 
 	// Initialize sessionStore
@@ -66,11 +68,11 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Get("/", homePage)
-	fileServer(r, "/assets", http.Dir("./static"))
+	//fileServer(r, "/assets", http.Dir("./static"))
 
 	r.Get("/favicon.ico", serveFavicon)
 	/* Listen */
-	http.ListenAndServe(":8080", context.ClearHandler(r))
+	http.ListenAndServe(":5000", context.ClearHandler(r))
 }
 
 // When someone visits the home page
