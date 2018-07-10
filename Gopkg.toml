@@ -31,7 +31,7 @@
 
 [metadata.heroku]
   root-package = "github.com/wcalandro/prosu-go"
-  go-version = "go1.10.3"
+  go-version = "go1.10.2"
   pkg-spec = "."
 
 [[constraint]]
