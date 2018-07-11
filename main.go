@@ -19,9 +19,6 @@ import (
 )
 
 var log = logging.MustGetLogger("prosu")
-var format = logging.MustStringFormatter(
-	`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`,
-)
 
 /* Set up session store */
 var sessionStore *redistore.RediStore
@@ -34,13 +31,14 @@ type basicInterface struct {
 	session *sessions.Session
 }
 
-func main() {
+func init() {
 	/* First, setting up logging */
 	loggingBackend := logging.NewLogBackend(os.Stdout, "", 0)
+	format := logging.MustStringFormatter(
+		`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`,
+	)
 	loggingBackendFormatter := logging.NewBackendFormatter(loggingBackend, format)
-
 	logging.SetBackend(loggingBackendFormatter)
-
 	/* Second, as long as we aren't in the production environment, try to load a .env for configuration */
 	if os.Getenv("ENVIRONMENT") != "production" {
 		if err := godotenv.Load(); err != nil {
@@ -55,7 +53,9 @@ func main() {
 
 	// Initialize sessionStore
 	sessionStore = setupSessionStore()
+}
 
+func main() {
 	/* Set up chi router */
 	// Initialize the router
 	r := chi.NewRouter()
