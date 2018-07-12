@@ -2,6 +2,42 @@
 
 
 [[projects]]
+  name = "github.com/ChimeraCoder/anaconda"
+  packages = ["."]
+  revision = "9c68684170b980d5b4c2ed08fae9b530e659904d"
+  version = "v2.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/ChimeraCoder/tokenbucket"
+  packages = ["."]
+  revision = "c5a927568de7aad8a58127d80bcd36ca4e71e454"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/azr/backoff"
+  packages = ["."]
+  revision = "53511d3c733003985b0b76f733df1f4d0095ee6a"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/dustin/go-jsonpointer"
+  packages = ["."]
+  revision = "ba0abeacc3dcca5b9b20f31509c46794edbc9965"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/dustin/gojson"
+  packages = ["."]
+  revision = "2e71ec9dd5adce3b168cd0dbde03b5cc04951c30"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/garyburd/go-oauth"
+  packages = ["oauth"]
+  revision = "bca2e7f09a178fd36b034107a00e2323bca6a82e"
+
+[[projects]]
   name = "github.com/garyburd/redigo"
   packages = [
     "internal",
@@ -21,6 +57,18 @@
     "internal/scram"
   ]
   revision = "113d3961e7311526535a1ef7042196563d442761"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/go-bongo/bongo"
+  packages = ["."]
+  revision = "761759e31d8fed917377aa7085db01d218ce50d8"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/go-bongo/go-dotaccess"
+  packages = ["."]
+  revision = "ae070a2d2a38fd7233e255ded21fb26fe36b4796"
 
 [[projects]]
   name = "github.com/go-chi/chi"
@@ -56,10 +104,28 @@
   version = "v1.2.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/mrjones/oauth"
+  packages = ["."]
+  revision = "f4e24b6d100c9436cbfe5d439581653d455490e7"
+
+[[projects]]
+  name = "github.com/oleiade/reflections"
+  packages = ["."]
+  revision = "2b6ec3da648e3e834dc41bad8d9ed7f2dc6a9496"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/op/go-logging"
   packages = ["."]
   revision = "b2cb9fa56473e98db8caba80237377e83fe44db5"
   version = "v1"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "cffdcf672aee934982473246bc7e9a8ba446aa9b"
 
 [[projects]]
   name = "gopkg.in/boj/redistore.v1"
@@ -70,6 +136,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cbdf9ee154f556b22731aef935c1e1bf9fc70a81fc24d1304356d1910502d240"
+  inputs-digest = "026aad7f5c562b5b0ad8a49b6767526300e1ff74ea7f9db7384a39d35b570239"
   solver-name = "gps-cdcl"
   solver-version = 1

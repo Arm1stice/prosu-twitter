@@ -1,14 +1,17 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"html/template"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
+	"github.com/go-bongo/bongo"
+
 	"github.com/gorilla/sessions"
+	"github.com/mrjones/oauth"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -30,6 +33,23 @@ var templates = template.Must(template.ParseGlob("templates/*"))
 type basicInterface struct {
 	session *sessions.Session
 }
+
+/* Twitter Consumer Key and Secret */
+var consumerKey string
+var consumerSecret string
+var twitterConsumer *oauth.Consumer
+
+// Domain
+var domain string
+
+type sessionTokenStorer struct {
+	Token *oauth.RequestToken
+}
+
+// Database variables
+var mongoConnectionString = os.Getenv("MONGODB_CONNECTION_STRING")
+var mongoDatabase = os.Getenv("MONGO_DATABASE")
+var connection *bongo.Connection
 
 func init() {
 	/* First, setting up logging */
@@ -53,6 +73,38 @@ func init() {
 
 	// Initialize sessionStore
 	sessionStore = setupSessionStore()
+
+	// Initialize consumer key and secret
+	consumerKey = os.Getenv("CONSUMER_KEY")
+	consumerSecret = os.Getenv("CONSUMER_SECRET")
+
+	// Initialize domain
+	domain = os.Getenv("DOMAIN")
+
+	// Initialize Twitter client
+	twitterConsumer = oauth.NewConsumer(
+		consumerKey,
+		consumerSecret,
+		oauth.ServiceProvider{
+			RequestTokenUrl:   "https://api.twitter.com/oauth/request_token",
+			AuthorizeTokenUrl: "https://api.twitter.com/oauth/authenticate",
+			AccessTokenUrl:    "https://api.twitter.com/oauth/access_token",
+		},
+	)
+
+	// Add sessionTokenStorer to gob
+	gob.Register(sessionTokenStorer{})
+
+	// Connect to MongoDB
+	conn, err := bongo.Connect(&bongo.Config{
+		ConnectionString: mongoConnectionString,
+		Database:         mongoDatabase,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	connection = conn
 }
 
 func main() {
@@ -68,53 +120,16 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Get("/", homePage)
-	//fileServer(r, "/assets", http.Dir("./static"))
+	r.Get("/connect/twitter", redirectToTwitter)
+	r.Get("/connect/twitter/callback", obtainAccessToken)
 
-	r.Get("/favicon.ico", serveFavicon)
+	//FileServer(r, "/assets", http.Dir("./static"))
+
+	r.Get("/favicon.ico", ServeFavicon)
 	/* Listen */
-	http.ListenAndServe(":5000", context.ClearHandler(r))
-}
-
-// When someone visits the home page
-func homePage(w http.ResponseWriter, r *http.Request) {
-	session, sessionError := sessionStore.Get(r, "prosu_session")
-	if sessionError != nil {
-		log.Error("There was an error getting the user's session")
+	port := "5000"
+	if envPort := os.Getenv("PORT"); envPort != "" {
+		port = envPort
 	}
-	session.Save(r, w)
-
-	templates.ExecuteTemplate(w, "index.html", basicInterface{session})
-}
-
-// Serve the favicon
-func serveFavicon(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/favicon.ico")
-}
-
-// Setup Fileserver
-// Code from https://github.com/go-chi/chi/blob/master/_examples/fileserver/main.go
-func fileServer(r chi.Router, path string, root http.FileSystem) {
-	if strings.ContainsAny(path, "{}*") {
-		panic("FileServer does not permit URL parameters.")
-	}
-
-	fs := http.StripPrefix(path, http.FileServer(root))
-
-	if path != "/" && path[len(path)-1] != '/' {
-		r.Get(path, http.RedirectHandler(path+"/", 301).ServeHTTP)
-		path += "/"
-	}
-	path += "*"
-
-	r.Get(path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fs.ServeHTTP(w, r)
-	}))
-}
-
-func setupSessionStore() *redistore.RediStore {
-	store, err := redistore.NewRediStore(10, "tcp", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PASSWORD"), []byte(os.Getenv("SESSION_SECRET")))
-	if err != nil {
-		panic(err)
-	}
-	return store
+	http.ListenAndServe(":"+port, context.ClearHandler(r))
 }

@@ -53,3 +53,11 @@
 [[constraint]]
   branch = "master"
   name = "github.com/globalsign/mgo"
+  
+[[constraint]]
+  branch = "master"
+  name = "github.com/mrjones/oauth"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/go-bongo/bongo"

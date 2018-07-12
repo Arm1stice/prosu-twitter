@@ -3,3 +3,4 @@
 .vagrant/*
 prosu-go*
 .DS_Store
+vendor/*
