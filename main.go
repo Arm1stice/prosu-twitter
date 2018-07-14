@@ -8,14 +8,18 @@ import (
 	"os"
 	"time"
 
+	"github.com/globalsign/mgo/bson"
+
 	"github.com/go-bongo/bongo"
 
-	"github.com/gorilla/sessions"
 	"github.com/mrjones/oauth"
+
+	ctxt "context"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/gorilla/context"
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 	"github.com/op/go-logging"
 	redistore "gopkg.in/boj/redistore.v1"
@@ -28,11 +32,6 @@ var sessionStore *redistore.RediStore
 
 /* Set up templates */
 var templates = template.Must(template.ParseGlob("templates/*"))
-
-/* Basic interface */
-type basicInterface struct {
-	session *sessions.Session
-}
 
 /* Twitter Consumer Key and Secret */
 var consumerKey string
@@ -47,8 +46,8 @@ type sessionTokenStorer struct {
 }
 
 // Database variables
-var mongoConnectionString = os.Getenv("MONGODB_CONNECTION_STRING")
-var mongoDatabase = os.Getenv("MONGO_DATABASE")
+var mongoConnectionString string
+var mongoDatabase string
 var connection *bongo.Connection
 
 func init() {
@@ -96,6 +95,8 @@ func init() {
 	gob.Register(sessionTokenStorer{})
 
 	// Connect to MongoDB
+	mongoConnectionString = os.Getenv("MONGODB_CONNECTION_STRING")
+	mongoDatabase = os.Getenv("MONGODB_DATABASE")
 	conn, err := bongo.Connect(&bongo.Config{
 		ConnectionString: mongoConnectionString,
 		Database:         mongoDatabase,
@@ -118,11 +119,12 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(getLoggedInValue)
 
 	r.Get("/", homePage)
 	r.Get("/connect/twitter", redirectToTwitter)
 	r.Get("/connect/twitter/callback", obtainAccessToken)
-
+	r.Get("/logout", logoutUser)
 	//FileServer(r, "/assets", http.Dir("./static"))
 
 	r.Get("/favicon.ico", ServeFavicon)
@@ -131,5 +133,59 @@ func main() {
 	if envPort := os.Getenv("PORT"); envPort != "" {
 		port = envPort
 	}
+	defer connection.Session.Close()
 	http.ListenAndServe(":"+port, context.ClearHandler(r))
+}
+
+func getLoggedInValue(next http.Handler) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		session, sessionError := sessionStore.Get(r, "prosu_session")
+		ctx := r.Context()
+		if sessionError != nil {
+			log.Error("Error getting session")
+			ctx = ctxt.WithValue(ctx, "session_error", sessionError.Error())
+		} else {
+			isAuthenticated := false
+			if session.Values["isAuthenticated"] == true {
+				isAuthenticated = true
+			}
+			ctx = ctxt.WithValue(ctx, "session_error", "")
+			ctx = ctxt.WithValue(ctx, "session", session)
+			ctx = ctxt.WithValue(ctx, "isAuthenticated", isAuthenticated)
+			if isAuthenticated {
+				user := &User{}
+				err := connection.Collection("usermodels").FindById(bson.ObjectIdHex(session.Values["user_id"].(string)), user)
+				if err != nil {
+					ctx = ctxt.WithValue(ctx, "user_error", err.Error())
+				} else {
+					ctx = ctxt.WithValue(ctx, "user_error", "")
+					ctx = ctxt.WithValue(ctx, "user", user)
+				}
+			}
+		}
+		next.ServeHTTP(w, r.WithContext(ctx))
+	}
+	return http.HandlerFunc(fn)
+}
+
+func logoutUser(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	sessionError := ctx.Value("session_error").(string)
+	if sessionError != "" {
+		log.Error("There was an error getting the user's session")
+		log.Error(sessionError)
+		reqID := middleware.GetReqID(ctx)
+		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		return
+	}
+	session := ctx.Value("session").(*sessions.Session)
+	session.Options.MaxAge = -1
+	if err := session.Save(r, w); err != nil {
+		log.Error("There was an error saving the user's session")
+		log.Error(sessionError)
+		reqID := middleware.GetReqID(ctx)
+		http.Error(w, "Error saving user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }

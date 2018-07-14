@@ -1,29 +1,31 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"net/url"
 
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/go-chi/chi/middleware"
+	"github.com/gorilla/sessions"
 	"github.com/mrjones/oauth"
 )
 
 // Redirect a user to Twitter to authenticate if they haven't authenticated already
 func redirectToTwitter(w http.ResponseWriter, r *http.Request) {
-	// Get the user's session
-	session, sessionError := sessionStore.Get(r, "prosu_session")
-	if sessionError != nil {
+	ctx := r.Context()
+	sessionError := ctx.Value("session_error").(string)
+	if sessionError != "" {
 		log.Error("There was an error getting the user's session")
-		ctx := r.Context()
+		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
 		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
 		return
 	}
+	session := ctx.Value("session").(*sessions.Session)
+	isAuthenticated := ctx.Value("isAuthenticated").(bool)
 
 	// See if the user is already authenticated
-	if session.Values["isAuthenticated"] == true {
+	if isAuthenticated {
 		// User is already authenticated, redirect them home
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
@@ -33,7 +35,6 @@ func redirectToTwitter(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Error("There was an error generating the URL to redirect the user to for Twitter authorization")
 		log.Error(err.Error())
-		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
 		http.Error(w, "Error generating Twitter redirect URL\nRequestID: "+reqID, http.StatusInternalServerError)
 		return
@@ -55,15 +56,16 @@ func redirectToTwitter(w http.ResponseWriter, r *http.Request) {
 
 // Obtain user's access token when Twitter redirects us
 func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
-	// Get the user's session
-	session, sessionError := sessionStore.Get(r, "prosu_session")
-	if sessionError != nil {
+	ctx := r.Context()
+	sessionError := ctx.Value("session_error").(string)
+	if sessionError != "" {
 		log.Error("There was an error getting the user's session")
-		ctx := r.Context()
+		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
 		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
 		return
 	}
+	session := ctx.Value("session").(*sessions.Session)
 
 	twitterRequestToken := (session.Values["twitter_token"].(sessionTokenStorer)).Token
 
@@ -108,21 +110,43 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 	twitterAccessToken, err := twitterConsumer.AuthorizeToken(twitterRequestToken, verificationCode)
 	if err != nil {
 		log.Error("Error obtaining access token")
+		log.Error(err.Error())
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
 		http.Error(w, "Error obtaining access token\nRequestID: "+reqID, http.StatusInternalServerError)
 		return
 	}
 
-	user, err := getUserInfo(twitterAccessToken)
+	twitterUser, err := getUserInfo(twitterAccessToken)
 	if err != nil {
 		log.Error("Error getting Twitter user info")
+		log.Error(err.Error())
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
 		http.Error(w, "Error getting Twitter user info\nRequestID: "+reqID, http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(w, "Done: "+user.IdStr+" | "+user.ScreenName+" | "+user.Name)
+
+	user, err := findOrCreateUser(twitterUser, twitterAccessToken)
+	if err != nil {
+		log.Error("Error finding or creating user")
+		log.Error(err.Error())
+		ctx := r.Context()
+		reqID := middleware.GetReqID(ctx)
+		http.Error(w, "Error finding or creating user\nRequestID: "+reqID, http.StatusInternalServerError)
+		return
+	}
+	session.Values["isAuthenticated"] = true
+	session.Values["user_id"] = user.GetId().Hex()
+	if err := session.Save(r, w); err != nil {
+		log.Error("Error saving session after the user was logged in")
+		log.Error(err.Error())
+		ctx := r.Context()
+		reqID := middleware.GetReqID(ctx)
+		http.Error(w, "Error saving session after being logged in\nRequestID: "+reqID, http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
 func getUserInfo(accessToken *oauth.AccessToken) (anaconda.User, error) {
