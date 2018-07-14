@@ -9,7 +9,7 @@ import (
 
 // ServeFavicon serve the favicon
 func ServeFavicon(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "../../static/favicon.ico")
+	http.ServeFile(w, r, "./static/favicon.ico")
 }
 
 // FileServer Serve a fileserver on the specified router, at the specified path, at the specified directory
