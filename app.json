@@ -1,0 +1,14 @@
+{
+  "name": "prosu-twitter",
+  "description": "Twitter application for Prosu",
+  "keywords": [
+    "prosu",
+    "twitter"
+  ],
+  "website": "https://twitter.prosu.xyz/",
+  "dokku":{
+    "plugins":[
+      "mongo","redis"
+    ]
+  }
+}
