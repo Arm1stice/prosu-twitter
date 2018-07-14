@@ -95,11 +95,9 @@ func init() {
 	gob.Register(sessionTokenStorer{})
 
 	// Connect to MongoDB
-	mongoConnectionString = os.Getenv("MONGODB_CONNECTION_STRING")
-	mongoDatabase = os.Getenv("MONGODB_DATABASE")
+	mongoConnectionString = os.Getenv("MONGO_URL")
 	conn, err := bongo.Connect(&bongo.Config{
 		ConnectionString: mongoConnectionString,
-		Database:         mongoDatabase,
 	})
 	if err != nil {
 		panic(err)
