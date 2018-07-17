@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/go-chi/chi/middleware"
@@ -31,7 +32,12 @@ func redirectToTwitter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, url, err := twitterConsumer.GetRequestTokenAndUrl("https://" + domain + "/connect/twitter/callback")
+	protocol := "https://"
+	if os.Getenv("ENVIRONMENT") != "production" {
+		protocol = "http://"
+	}
+
+	token, url, err := twitterConsumer.GetRequestTokenAndUrl(protocol + domain + "/connect/twitter/callback")
 	if err != nil {
 		log.Error("There was an error generating the URL to redirect the user to for Twitter authorization")
 		log.Error(err.Error())
