@@ -5,8 +5,8 @@ import (
 
 	"github.com/globalsign/mgo/bson"
 	"github.com/gorilla/sessions"
-	"golang.org/x/text/message"
 
+	"github.com/dustin/go-humanize"
 	"github.com/go-chi/chi/middleware"
 )
 
@@ -21,7 +21,6 @@ type homeInterface struct {
 
 var currentUsers string
 var totalTweets string
-var commaPrinter = message.NewPrinter(message.MatchLanguage("en"))
 
 func init() {
 	setInterval(updateCurrentUsers, 60*1000, true)
@@ -38,7 +37,7 @@ func updateCurrentUsers() {
 		log.Error(err.Error())
 		return
 	}
-	currentUsers = commaPrinter.Sprintf("%d", count)
+	currentUsers = humanize.Comma(int64(count))
 }
 
 func updateTotalTweets() {
@@ -49,7 +48,7 @@ func updateTotalTweets() {
 	for rSet.Next(user) {
 		total = total + len(user.TweetHistory)
 	}
-	totalTweets = commaPrinter.Sprintf("%d", total)
+	totalTweets = humanize.Comma(int64(total))
 }
 
 // When someone visits the home page

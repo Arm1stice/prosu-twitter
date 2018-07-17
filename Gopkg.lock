@@ -21,6 +21,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/dustin/go-humanize"
+  packages = ["."]
+  revision = "9f541cc9db5d55bce703bd99987c9d5cb8eea45e"
+
+[[projects]]
+  branch = "master"
   name = "github.com/dustin/go-jsonpointer"
   packages = ["."]
   revision = "ba0abeacc3dcca5b9b20f31509c46794edbc9965"
@@ -110,6 +116,16 @@
   revision = "f4e24b6d100c9436cbfe5d439581653d455490e7"
 
 [[projects]]
+  name = "github.com/nicksnyder/go-i18n"
+  packages = [
+    "v2/i18n",
+    "v2/internal",
+    "v2/internal/plural"
+  ]
+  revision = "8c6996ea1058153460146b16c341a4ae611f7cf7"
+  version = "v2.0.0-beta.3"
+
+[[projects]]
   name = "github.com/oleiade/reflections"
   packages = ["."]
   revision = "2b6ec3da648e3e834dc41bad8d9ed7f2dc6a9496"
@@ -128,6 +144,17 @@
   revision = "cffdcf672aee934982473246bc7e9a8ba446aa9b"
 
 [[projects]]
+  name = "golang.org/x/text"
+  packages = [
+    "internal/gen",
+    "internal/tag",
+    "language",
+    "unicode/cldr"
+  ]
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
+
+[[projects]]
   name = "gopkg.in/boj/redistore.v1"
   packages = ["."]
   revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
@@ -136,6 +163,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "026aad7f5c562b5b0ad8a49b6767526300e1ff74ea7f9db7384a39d35b570239"
+  inputs-digest = "3c4ced093729909ba1cbb971a4cf67389cf0e6b14d07ccf9587a8009f5d081b0"
   solver-name = "gps-cdcl"
   solver-version = 1
