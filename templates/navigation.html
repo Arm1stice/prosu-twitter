@@ -9,11 +9,11 @@
     <ul class="navbar-nav">
       {{if .IsAuthenticated}}
       <li class="nav-item">
-        <a class="nav-link" href="/logout">Logout of @{{.User.Twitter.Profile.Handle}}</a>
+        <a class="nav-link" href="/logout">{{.Translations.Navbar.Logout}}</a>
       </li>
       {{else}}
       <li class="nav-item">
-        <a class="nav-link" href="/connect/twitter">Sign in with Twitter</a>
+        <a class="nav-link" href="/connect/twitter">{{.Translations.Navbar.SignIn}}</a>
       </li>
       {{end}}
     </ul>

@@ -5,6 +5,7 @@ import (
 
 	"github.com/globalsign/mgo/bson"
 	"github.com/gorilla/sessions"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 
 	"github.com/dustin/go-humanize"
 	"github.com/go-chi/chi/middleware"
@@ -15,8 +16,18 @@ type homeInterface struct {
 	Session         *sessions.Session
 	IsAuthenticated bool
 	User            User
-	CurrentUsers    string
-	TotalTweets     string
+	Translations    homePageTranslations
+}
+
+type homePageTranslations struct {
+	Navbar      navbarTranslations
+	TotalUsers  string
+	TotalTweets string
+}
+
+type navbarTranslations struct {
+	SignIn string
+	Logout string
 }
 
 var currentUsers string
@@ -53,6 +64,11 @@ func updateTotalTweets() {
 
 // When someone visits the home page
 func homePage(w http.ResponseWriter, r *http.Request) {
+	// Localization stuff
+	lang := r.FormValue("lang")
+	accept := r.Header.Get("Accept-Language")
+	localizer := i18n.NewLocalizer(bundle, lang, accept)
+
 	ctx := r.Context()
 	sessionError := ctx.Value("session_error").(string)
 	if sessionError != "" {
@@ -76,12 +92,36 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		}
 		user = *ctx.Value("user").(*User)
 	}
+
+	// Localization
+	translations := translateHomePage(localizer, isAuthenticated, user)
+
 	pageData := homeInterface{
 		Session:         session,
 		IsAuthenticated: isAuthenticated,
 		User:            user,
-		CurrentUsers:    currentUsers,
-		TotalTweets:     totalTweets,
+		Translations:    translations,
 	}
 	templates.ExecuteTemplate(w, "index.html", pageData)
+}
+
+func translateHomePage(localizer *i18n.Localizer, isAuthenticated bool, user User) homePageTranslations {
+	navbar := translateNavbar(localizer, isAuthenticated, user)
+	homePageTotalUsers := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "HomePageTotalUsers",
+		TemplateData: map[string]string{
+			"TotalUsers": currentUsers,
+		},
+	})
+	homePageTotalTweets := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "HomePageTotalTweets",
+		TemplateData: map[string]string{
+			"TotalTweets": totalTweets,
+		},
+	})
+	return homePageTranslations{
+		Navbar:      navbar,
+		TotalUsers:  homePageTotalUsers,
+		TotalTweets: homePageTotalTweets,
+	}
 }

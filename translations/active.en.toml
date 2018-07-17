@@ -1,0 +1,15 @@
+[NavbarSignIn]
+description = "The text telling the user to sign in using their Twitter account"
+other = "Sign in with Twitter"
+
+[NavbarLogout]
+description = "The text telling the user to sign out of their Twitter account"
+other = "Logout of @{{.Handle}}"
+
+[HomePageTotalUsers]
+description = "Displays the total number of users"
+other = "Total Users: {{.TotalUsers}}"
+
+[HomePageTotalTweets]
+description = "Displays the total number of tweets posted"
+other = "Total Tweets: {{.TotalTweets}}"

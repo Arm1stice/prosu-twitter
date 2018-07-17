@@ -8,7 +8,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/globalsign/mgo/bson"
+	"golang.org/x/text/language"
 
 	"github.com/go-bongo/bongo"
 
@@ -21,6 +23,7 @@ import (
 	"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/op/go-logging"
 	redistore "gopkg.in/boj/redistore.v1"
 )
@@ -49,6 +52,9 @@ type sessionTokenStorer struct {
 var mongoConnectionString string
 var mongoDatabase string
 var connection *bongo.Connection
+
+// i18n bundle
+var bundle *i18n.Bundle
 
 func init() {
 	/* First, setting up logging */
@@ -104,6 +110,7 @@ func init() {
 	}
 
 	connection = conn
+
 }
 
 func main() {
@@ -126,6 +133,13 @@ func main() {
 	//FileServer(r, "/assets", http.Dir("./static"))
 
 	r.Get("/favicon.ico", ServeFavicon)
+
+	// Set up translator
+	bundle = &i18n.Bundle{DefaultLanguage: language.English}
+	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
+
+	bundle.MustLoadMessageFile("./translations/active.en.toml")
+
 	/* Listen */
 	port := "5000"
 	if envPort := os.Getenv("PORT"); envPort != "" {
@@ -186,4 +200,26 @@ func logoutUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+}
+
+func translateNavbar(localizer *i18n.Localizer, isAuthenticated bool, user User) navbarTranslations {
+	signIn := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "NavbarSignIn",
+	})
+
+	var username string
+	if isAuthenticated {
+		username = user.Twitter.Profile.Handle
+	}
+
+	logout := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "NavbarLogout",
+		TemplateData: map[string]string{
+			"Handle": username,
+		},
+	})
+	return navbarTranslations{
+		SignIn: signIn,
+		Logout: logout,
+	}
 }
