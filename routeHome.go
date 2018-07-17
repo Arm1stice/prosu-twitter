@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/globalsign/mgo/bson"
 	"github.com/gorilla/sessions"
 
 	"github.com/go-chi/chi/middleware"
@@ -13,6 +14,40 @@ type homeInterface struct {
 	Session         *sessions.Session
 	IsAuthenticated bool
 	User            User
+	CurrentUsers    int
+	TotalTweets     int
+}
+
+var currentUsers = 0
+var totalTweets = 0
+
+func init() {
+	setInterval(updateCurrentUsers, 60*1000, true)
+	setInterval(updateTotalTweets, 60*60*1000, true)
+	setTimeout(updateCurrentUsers, 5000)
+	setTimeout(updateTotalTweets, 5000)
+}
+
+func updateCurrentUsers() {
+	rSet := connection.Collection("usermodels").Find(bson.M{})
+	count, err := CountResults(rSet)
+	if err != nil {
+		log.Error("Error updating current users")
+		log.Error(err.Error())
+		return
+	}
+	currentUsers = count
+}
+
+func updateTotalTweets() {
+	total := 0
+	user := &User{}
+	rSet := connection.Collection("usermodels").Find(bson.M{})
+
+	for rSet.Next(user) {
+		total = total + len(user.TweetHistory)
+	}
+	totalTweets = total
 }
 
 // When someone visits the home page
@@ -44,6 +79,8 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		Session:         session,
 		IsAuthenticated: isAuthenticated,
 		User:            user,
+		CurrentUsers:    currentUsers,
+		TotalTweets:     totalTweets,
 	}
 	templates.ExecuteTemplate(w, "index.html", pageData)
 }
