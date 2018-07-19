@@ -8,8 +8,12 @@ other = "Logout of @{{.Handle}}"
 
 [HomePageTotalUsers]
 description = "Displays the total number of users"
-other = "Total Users: {{.TotalUsers}}"
+other = " total users!"
 
 [HomePageTotalTweets]
 description = "Displays the total number of tweets posted"
-other = "Total Tweets: {{.TotalTweets}}"
+other = " tweets posted!"
+
+[HomePageSettingsButton]
+description = "Text for the button linking to the user's settings"
+other = "Tweet Settings"

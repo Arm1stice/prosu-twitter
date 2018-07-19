@@ -12,17 +12,20 @@ import (
 )
 
 /* Home page interface */
-type homeInterface struct {
+type homePageData struct {
 	Session         *sessions.Session
 	IsAuthenticated bool
 	User            User
 	Translations    homePageTranslations
+	TotalUsers      string
+	TotalTweets     string
 }
 
 type homePageTranslations struct {
-	Navbar      navbarTranslations
-	TotalUsers  string
-	TotalTweets string
+	Navbar             navbarTranslations
+	TotalUsers         string
+	TotalTweets        string
+	SettingsButtonText string
 }
 
 type navbarTranslations struct {
@@ -64,11 +67,6 @@ func updateTotalTweets() {
 
 // When someone visits the home page
 func homePage(w http.ResponseWriter, r *http.Request) {
-	// Localization stuff
-	lang := r.FormValue("lang")
-	accept := r.Header.Get("Accept-Language")
-	localizer := i18n.NewLocalizer(bundle, lang, accept)
-
 	ctx := r.Context()
 	sessionError := ctx.Value("session_error").(string)
 	if sessionError != "" {
@@ -94,14 +92,21 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Localization
+	lang := session.Values["language"].(string) // TODO: CHANGE THIS TO THE LANGUAGE SAVED IN THE SESSION
+	accept := r.Header.Get("Accept-Language")
+	localizer := i18n.NewLocalizer(bundle, lang, accept)
+
 	translations := translateHomePage(localizer, isAuthenticated, user)
 
-	pageData := homeInterface{
+	pageData := homePageData{
 		Session:         session,
 		IsAuthenticated: isAuthenticated,
 		User:            user,
 		Translations:    translations,
+		TotalUsers:      currentUsers,
+		TotalTweets:     totalTweets,
 	}
+
 	templates.ExecuteTemplate(w, "index.html", pageData)
 }
 
@@ -119,9 +124,15 @@ func translateHomePage(localizer *i18n.Localizer, isAuthenticated bool, user Use
 			"TotalTweets": totalTweets,
 		},
 	})
+
+	homePageSettingsButton := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "HomePageSettingsButton",
+	})
+
 	return homePageTranslations{
-		Navbar:      navbar,
-		TotalUsers:  homePageTotalUsers,
-		TotalTweets: homePageTotalTweets,
+		Navbar:             navbar,
+		TotalUsers:         homePageTotalUsers,
+		TotalTweets:        homePageTotalTweets,
+		SettingsButtonText: homePageSettingsButton,
 	}
 }
