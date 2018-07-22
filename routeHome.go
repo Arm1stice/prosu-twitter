@@ -28,11 +28,6 @@ type homePageTranslations struct {
 	SettingsButtonText string
 }
 
-type navbarTranslations struct {
-	SignIn string
-	Logout string
-}
-
 var currentUsers string
 var totalTweets string
 
@@ -92,7 +87,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Localization
-	lang := session.Values["language"].(string) // TODO: CHANGE THIS TO THE LANGUAGE SAVED IN THE SESSION
+	lang := session.Values["language"].(string)
 	accept := r.Header.Get("Accept-Language")
 	localizer := i18n.NewLocalizer(bundle, lang, accept)
 

@@ -202,6 +202,11 @@ func logoutUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
+type navbarTranslations struct {
+	SignIn string
+	Logout string
+}
+
 func translateNavbar(localizer *i18n.Localizer, isAuthenticated bool, user User) navbarTranslations {
 	signIn := localizer.MustLocalize(&i18n.LocalizeConfig{
 		MessageID: "NavbarSignIn",
