@@ -24,7 +24,7 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user session", reqID, http.StatusInternalServerError)
 		return
 	}
 	session := ctx.Value("session").(*sessions.Session)
@@ -43,14 +43,14 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 			log.Error("There was an error getting the user's account info")
 			log.Error(userError)
 			reqID := middleware.GetReqID(ctx)
-			http.Error(w, "Error getting user account info\nRequestID: "+reqID, http.StatusInternalServerError)
+			routeError(w, "Error getting user account info", reqID, http.StatusInternalServerError)
 			return
 		}
 		user = *ctx.Value("user").(*User)
 	}
 
 	// Localization
-	lang := session.Values["language"].(string) // TODO: CHANGE THIS TO THE LANGUAGE SAVED IN THE SESSION
+	lang := session.Values["language"].(string)
 	accept := r.Header.Get("Accept-Language")
 	localizer := i18n.NewLocalizer(bundle, lang, accept)
 

@@ -134,6 +134,8 @@ func main() {
 
 	r.Get("/favicon.ico", ServeFavicon)
 
+	r.NotFound(notFound)
+
 	// Set up translator
 	bundle = &i18n.Bundle{DefaultLanguage: language.English}
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
