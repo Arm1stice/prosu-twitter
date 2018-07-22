@@ -174,6 +174,10 @@ func getLoggedInValue(next http.Handler) http.Handler {
 					ctx = ctxt.WithValue(ctx, "user", user)
 				}
 			}
+			if session.Values["language"] == nil {
+				session.Values["language"] = ""
+			}
+			session.Save(r, w)
 		}
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
