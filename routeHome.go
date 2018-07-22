@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-/* Home page interface */
+/* Home page data structs */
 type homePageData struct {
 	Session         *sessions.Session
 	IsAuthenticated bool
