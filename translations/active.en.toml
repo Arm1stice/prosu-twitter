@@ -16,7 +16,7 @@ other = " tweets posted!"
 
 [HomePageSettingsButton]
 description = "Text for the button linking to the user's settings"
-other = "Tweet Settings"
+other = "Edit Settings"
 
 [NotFoundText]
 description = "Tells the user that the page they are looking for can't be found"
