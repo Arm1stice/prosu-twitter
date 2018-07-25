@@ -41,7 +41,7 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		routeError(w, "Error getting user session", errors.New(sessionError), reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user session", errors.New(sessionError), reqID, 500)
 		return
 	}
 	session := ctx.Value("session").(*sessions.Session)
@@ -49,7 +49,7 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 
 	// Privileged page. If the user isn't authenticated, we need to redirect the user to login
 	if isAuthenticated == false {
-		http.Redirect(w, r, "/connect/twitter", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/connect/twitter", 302)
 		return
 	}
 
@@ -59,7 +59,7 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's account info")
 		log.Error(userError)
 		reqID := middleware.GetReqID(ctx)
-		routeError(w, "Error getting user account info", errors.New(userError), reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user account info", errors.New(userError), reqID, 500)
 		return
 	}
 	user = *ctx.Value("user").(*User)
@@ -76,7 +76,7 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 	if bson.IsObjectIdHex(user.OsuSettings.Player.Hex()) {
 		err := connection.Collection("osuplayermodels").FindById(bson.ObjectIdHex(user.OsuSettings.Player.Hex()), &player)
 		if err != nil {
-			routeError(w, "Error getting osu! player information from database", err, middleware.GetReqID(ctx), http.StatusInternalServerError)
+			routeError(w, "Error getting osu! player information from database", err, middleware.GetReqID(ctx), 500)
 			return
 		}
 	}
@@ -164,14 +164,14 @@ func enableTweetPosting(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		routeError(w, "Error getting user session", errors.New(sessionError), reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user session", errors.New(sessionError), reqID, 500)
 		return
 	}
 	isAuthenticated := ctx.Value("isAuthenticated").(bool)
 
 	// Privileged page. If the user isn't authenticated, we need to redirect the user to login
 	if isAuthenticated == false {
-		http.Redirect(w, r, "/connect/twitter", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/connect/twitter", 302)
 		return
 	}
 
@@ -181,12 +181,12 @@ func enableTweetPosting(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's account info")
 		log.Error(userError)
 		reqID := middleware.GetReqID(ctx)
-		routeError(w, "Error getting user account info", errors.New(userError), reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user account info", errors.New(userError), reqID, 500)
 		return
 	}
 	user = *ctx.Value("user").(*User)
 	if user.OsuSettings.Enabled {
-		http.Redirect(w, r, "/settings", http.StatusTemporaryRedirect)
+		http.Redirect(w, r, "/settings", 302)
 		return
 	}
 
@@ -196,5 +196,47 @@ func enableTweetPosting(w http.ResponseWriter, r *http.Request) {
 		routeError(w, "Error saving user when enabling tweets", err, middleware.GetReqID(ctx), 500)
 		return
 	}
-	http.Redirect(w, r, "/settings", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/settings", 302)
+}
+
+func disableTweetPosting(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	sessionError := ctx.Value("session_error").(string)
+	if sessionError != "" {
+		log.Error("There was an error getting the user's session")
+		log.Error(sessionError)
+		reqID := middleware.GetReqID(ctx)
+		routeError(w, "Error getting user session", errors.New(sessionError), reqID, 500)
+		return
+	}
+	isAuthenticated := ctx.Value("isAuthenticated").(bool)
+
+	// Privileged page. If the user isn't authenticated, we need to redirect the user to login
+	if isAuthenticated == false {
+		http.Redirect(w, r, "/connect/twitter", 302)
+		return
+	}
+
+	var user User
+	userError := ctx.Value("user_error").(string)
+	if userError != "" {
+		log.Error("There was an error getting the user's account info")
+		log.Error(userError)
+		reqID := middleware.GetReqID(ctx)
+		routeError(w, "Error getting user account info", errors.New(userError), reqID, 500)
+		return
+	}
+	user = *ctx.Value("user").(*User)
+	if user.OsuSettings.Enabled == false {
+		http.Redirect(w, r, "/settings", 302)
+		return
+	}
+
+	user.OsuSettings.Enabled = false
+	err := connection.Collection("usermodels").Save(&user)
+	if err != nil {
+		routeError(w, "Error saving user when disabling tweets", err, middleware.GetReqID(ctx), 500)
+		return
+	}
+	http.Redirect(w, r, "/settings", 302)
 }

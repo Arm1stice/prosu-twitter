@@ -127,10 +127,15 @@ func main() {
 	r.Use(getLoggedInValue)
 
 	r.Get("/", homePage)
+
 	r.Get("/connect/twitter", redirectToTwitter)
 	r.Get("/connect/twitter/callback", obtainAccessToken)
+
 	r.Get("/logout", logoutUser)
+
 	r.Get("/settings", routeSettings)
+	r.Post("/settings/enable", enableTweetPosting)
+	r.Post("/settings/disable", disableTweetPosting)
 	//FileServer(r, "/assets", http.Dir("./static"))
 
 	r.Get("/favicon.ico", ServeFavicon)
@@ -202,7 +207,7 @@ func logoutUser(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		http.Error(w, "Error getting user session\nRequestID: "+reqID, 500)
 		return
 	}
 	session := ctx.Value("session").(*sessions.Session)
@@ -211,10 +216,10 @@ func logoutUser(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error saving the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error saving user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		http.Error(w, "Error saving user session\nRequestID: "+reqID, 500)
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/", 302)
 }
 
 type navbarTranslations struct {
