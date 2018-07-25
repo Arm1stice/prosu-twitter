@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/BurntSushi/toml"
+  packages = ["."]
+  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
+  version = "v0.3.0"
+
+[[projects]]
   name = "github.com/ChimeraCoder/anaconda"
   packages = ["."]
   revision = "9c68684170b980d5b4c2ed08fae9b530e659904d"
@@ -163,6 +169,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3c4ced093729909ba1cbb971a4cf67389cf0e6b14d07ccf9587a8009f5d081b0"
+  inputs-digest = "46970d8852bea69a6824d749d35a1dd606237bf1523616fbc730f53d86d0161e"
   solver-name = "gps-cdcl"
   solver-version = 1

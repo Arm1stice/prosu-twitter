@@ -19,7 +19,7 @@ func redirectToTwitter(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user session", reqID, http.StatusInternalServerError)
 		return
 	}
 	session := ctx.Value("session").(*sessions.Session)
@@ -42,7 +42,7 @@ func redirectToTwitter(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error generating the URL to redirect the user to for Twitter authorization")
 		log.Error(err.Error())
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error generating Twitter redirect URL\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error generating Twitter redirect URL", reqID, http.StatusInternalServerError)
 		return
 	}
 
@@ -53,7 +53,7 @@ func redirectToTwitter(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error saving session\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error saving session", reqID, http.StatusInternalServerError)
 		return
 	}
 
@@ -68,21 +68,28 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user session", reqID, http.StatusInternalServerError)
 		return
 	}
 	session := ctx.Value("session").(*sessions.Session)
 
-	twitterRequestToken := (session.Values["twitter_token"].(sessionTokenStorer)).Token
+	isAuthenticated := ctx.Value("isAuthenticated").(bool)
+	// See if the user is already authenticated
+	if isAuthenticated {
+		// User is already authenticated, redirect them home
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
 
 	// Check if the user has a token stored in their session
-	if twitterRequestToken == nil {
+	if session.Values["twitter_token"] == nil {
 		log.Error("User doesn't have a twitter token located in their session")
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "No token detected in your session\nRequestID: "+reqID, http.StatusBadRequest)
+		routeError(w, "No token detected in your session", reqID, http.StatusBadRequest)
 		return
 	}
+	twitterRequestToken := (session.Values["twitter_token"].(sessionTokenStorer)).Token
 
 	query := r.URL.Query()
 	verificationCode := query.Get("oauth_verifier")
@@ -92,7 +99,7 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error("No oauth_verifier returned in callback")
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "No oauth_verifier returned in callback\nRequestID: "+reqID, http.StatusBadRequest)
+		routeError(w, "No oauth_verifier returned in callback", reqID, http.StatusBadRequest)
 		return
 	}
 
@@ -100,7 +107,7 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error("No oauth_token returned in callback")
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "No oauth_token returned in callback\nRequestID: "+reqID, http.StatusBadRequest)
+		routeError(w, "No oauth_token returned in callback", reqID, http.StatusBadRequest)
 		return
 	}
 
@@ -108,7 +115,7 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error("Twitter oauth_token mismatch")
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Twitter oauth_token mismatch\nRequestID: "+reqID, http.StatusBadRequest)
+		routeError(w, "Twitter oauth_token mismatch", reqID, http.StatusBadRequest)
 		return
 	}
 
@@ -119,7 +126,7 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error obtaining access token\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error obtaining access token", reqID, http.StatusInternalServerError)
 		return
 	}
 
@@ -129,7 +136,7 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error getting Twitter user info\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting Twitter user info", reqID, http.StatusInternalServerError)
 		return
 	}
 
@@ -139,7 +146,7 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error finding or creating user\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error finding or creating user", reqID, http.StatusInternalServerError)
 		return
 	}
 	session.Values["isAuthenticated"] = true
@@ -149,7 +156,7 @@ func obtainAccessToken(w http.ResponseWriter, r *http.Request) {
 		log.Error(err.Error())
 		ctx := r.Context()
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error saving session after being logged in\nRequestID: "+reqID, http.StatusInternalServerError)
+		routeError(w, "Error saving session after being logged in", reqID, http.StatusInternalServerError)
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)

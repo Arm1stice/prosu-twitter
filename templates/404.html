@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Prosu</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> {{template "css_files" .}}
+</head>
+
+<body>
+    {{template "navbar" .}}
+    <div class='container'>
+        <center>
+            <br>
+            <span style='color: #F6A; font-size: 150px;'>404</span>
+            <br>
+            <span style='font-size: 50px'>{{.Translations.NotFoundText}}</span>
+            <br>
+        </center>
+    </div>
+
+    {{template "js_files" .}}
+</body>
+
+</html>

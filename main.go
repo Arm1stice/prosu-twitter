@@ -134,6 +134,16 @@ func main() {
 
 	r.Get("/favicon.ico", ServeFavicon)
 
+	// LoaderIO Configuration
+	loaderIoKey := os.Getenv("LOADERIO_KEY")
+	if loaderIoKey != "" {
+		r.Get("/"+loaderIoKey+".txt", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintf(w, loaderIoKey)
+		})
+	}
+
+	r.NotFound(notFound)
+
 	// Set up translator
 	bundle = &i18n.Bundle{DefaultLanguage: language.English}
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
@@ -174,6 +184,10 @@ func getLoggedInValue(next http.Handler) http.Handler {
 					ctx = ctxt.WithValue(ctx, "user", user)
 				}
 			}
+			if session.Values["language"] == nil {
+				session.Values["language"] = ""
+			}
+			session.Save(r, w)
 		}
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
@@ -200,6 +214,11 @@ func logoutUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+}
+
+type navbarTranslations struct {
+	SignIn string
+	Logout string
 }
 
 func translateNavbar(localizer *i18n.Localizer, isAuthenticated bool, user User) navbarTranslations {

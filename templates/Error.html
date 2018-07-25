@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Prosu</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> {{template "css_files" .}}
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style='background-color: #F6A !important;'>
+        <a class="navbar-brand" href="/">Prosu</a>
+    </nav>
+    <div class='container'>
+        <center>
+            <br>
+            <span style='color: #F6A; font-size: 150px;'>{{.Code}}</span>
+            <br>
+            <span style='font-size: 30px'>{{.Error}}</span>
+            <br>
+            <span style='font-size: 15px'>Request ID: {{.RequestID}}</span>
+            <br>
+        </center>
+    </div>
+
+    {{template "js_files" .}}
+</body>
+
+</html>
