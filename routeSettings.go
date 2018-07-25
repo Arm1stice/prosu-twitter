@@ -9,12 +9,17 @@ import (
 )
 
 type settingsPageData struct {
-	User         User
-	Translations settingsPageTranslations
+	User            User
+	Translations    settingsPageTranslations
+	IsAuthenticated bool
 }
 
 type settingsPageTranslations struct {
-	Navbar navbarTranslations
+	Navbar                     navbarTranslations
+	SettingsHeader             string
+	TweetPostingText           string
+	TweetPostingStatusEnabled  string
+	TweetPostingStatusDisabled string
 }
 
 func routeSettings(w http.ResponseWriter, r *http.Request) {
@@ -37,17 +42,15 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user User
-	if isAuthenticated {
-		userError := ctx.Value("user_error").(string)
-		if userError != "" {
-			log.Error("There was an error getting the user's account info")
-			log.Error(userError)
-			reqID := middleware.GetReqID(ctx)
-			routeError(w, "Error getting user account info", reqID, http.StatusInternalServerError)
-			return
-		}
-		user = *ctx.Value("user").(*User)
+	userError := ctx.Value("user_error").(string)
+	if userError != "" {
+		log.Error("There was an error getting the user's account info")
+		log.Error(userError)
+		reqID := middleware.GetReqID(ctx)
+		routeError(w, "Error getting user account info", reqID, http.StatusInternalServerError)
+		return
 	}
+	user = *ctx.Value("user").(*User)
 
 	// Localization
 	lang := session.Values["language"].(string)
@@ -57,8 +60,9 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 	translations := translateSettingsPage(localizer, isAuthenticated, user)
 
 	pageData := settingsPageData{
-		User:         user,
-		Translations: translations,
+		User:            user,
+		IsAuthenticated: true,
+		Translations:    translations,
 	}
 
 	// TODO: Create settings.html
@@ -68,15 +72,27 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 func translateSettingsPage(localizer *i18n.Localizer, isAuthenticated bool, user User) settingsPageTranslations {
 	navbar := translateNavbar(localizer, isAuthenticated, user)
 
-	// TODO: Add translated strings
-	/*homePageTotalUsers := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "HomePageTotalUsers",
-		TemplateData: map[string]string{
-			"TotalUsers": currentUsers,
-		},
-	})*/
+	settingsHeaderText := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageSettingsHeader",
+	})
+
+	settingsTweetPostingText := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageTweetPostingText",
+	})
+
+	settingsTweetPostingEnabled := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageTweetPostingStatusEnabled",
+	})
+
+	settingsTweetPostingDisabled := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageTweetPostingStatusDisabled",
+	})
 
 	return settingsPageTranslations{
-		Navbar: navbar,
+		Navbar:                     navbar,
+		SettingsHeader:             settingsHeaderText,
+		TweetPostingText:           settingsTweetPostingText,
+		TweetPostingStatusEnabled:  settingsTweetPostingEnabled,
+		TweetPostingStatusDisabled: settingsTweetPostingDisabled,
 	}
 }

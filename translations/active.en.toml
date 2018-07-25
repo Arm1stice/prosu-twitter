@@ -21,3 +21,19 @@ other = "Edit Settings"
 [NotFoundText]
 description = "Tells the user that the page they are looking for can't be found"
 other = "Page Not Found"
+
+[SettingsPageSettingsHeader]
+description = "The header for the page"
+other = "Settings"
+
+[SettingsPageTweetPostingText]
+description = "The text that goes before the text saying whether they have tweets enabled"
+other = "Tweet Posting:"
+
+[SettingsPageTweetPostingStatusEnabled]
+description = "Text saying Enabled"
+other = "Enabled"
+
+[SettingsPageTweetPostingStatusDisabled]
+description = "Text saying Disabled"
+other = "Disabled"

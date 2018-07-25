@@ -130,6 +130,7 @@ func main() {
 	r.Get("/connect/twitter", redirectToTwitter)
 	r.Get("/connect/twitter/callback", obtainAccessToken)
 	r.Get("/logout", logoutUser)
+	r.Get("/settings", routeSettings)
 	//FileServer(r, "/assets", http.Dir("./static"))
 
 	r.Get("/favicon.ico", ServeFavicon)
