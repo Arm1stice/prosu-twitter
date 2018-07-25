@@ -26,6 +26,12 @@
   revision = "53511d3c733003985b0b76f733df1f4d0095ee6a"
 
 [[projects]]
+  name = "github.com/certifi/gocertifi"
+  packages = ["."]
+  revision = "deb3ae2ef2610fde3330947281941c562861188b"
+  version = "2018.01.18"
+
+[[projects]]
   branch = "master"
   name = "github.com/dustin/go-humanize"
   packages = ["."]
@@ -57,6 +63,12 @@
   ]
   revision = "a69d19351219b6dd56f274f96d85a7014a2ec34e"
   version = "v1.6.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/getsentry/raven-go"
+  packages = ["."]
+  revision = "ba97302481f2659d9ae93288e422acb942093b26"
 
 [[projects]]
   branch = "master"
@@ -144,6 +156,12 @@
   version = "v1"
 
 [[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
@@ -169,6 +187,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "46970d8852bea69a6824d749d35a1dd606237bf1523616fbc730f53d86d0161e"
+  inputs-digest = "75f9acdb1b42082b7068ca6a1710dd5fb23fd6e999d3a3dd777c9b935dc9d37a"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -69,3 +69,7 @@
 [[constraint]]
   name = "github.com/nicksnyder/go-i18n"
   version = "2.0.0-beta.3"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/getsentry/raven-go"

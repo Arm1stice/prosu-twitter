@@ -18,8 +18,48 @@
         <div class='col-sm-1 col-md-3'></div>
 
         <div class='col-sm-10 col-md-6'>
-          <h1 class='display-4'>{{.Translations.SettingsHeader}}</h1><br>
-          <h4>{{.Translations.TweetPostingText}} {{if .User.OsuSettings.Enabled}}<span style='color:green'>{{.Translations.TweetPostingStatusEnabled}}</span>{{else}}<span style='color:red'>{{.Translations.TweetPostingStatusDisabled}}{{end}}</span></h4>
+          <h1 class='display-4'>{{.Translations.SettingsHeader}}</h1>
+          <br>
+          <h3>{{.Translations.TweetPostingText}} 
+          {{if .User.OsuSettings.Enabled}}
+            <span style='color:green'>{{.Translations.TweetPostingStatusEnabled}}</span>
+          {{else}}
+            <span style='color:red'>{{.Translations.TweetPostingStatusDisabled}}</span>
+          {{end}}
+          </h3>
+          {{if .User.OsuSettings.Enabled}}
+          {{if eq .User.OsuSettings.Player ""}}
+          <span style='color:red'>{{.Translations.NoDataWarning}}</span>
+          {{end}}
+          <form action='/settings/update' method='post'>
+            <p style='font-size: 20px'>{{.Translations.osuUsernameText}}</p>
+            <input type="text" class="form-control" value="{{.OsuPlayer.Username}}" id="osu_username" name="osu_username" placeholder="{{.Translations.osuUsernamePlaceholder}}" autocomplete="off" style="cursor: auto;">
+            <p style='font-size: 20px'>{{.Translations.gameModeText}}</p>
+            <select id='mode' name='game_mode' class="form-control">
+              {{range $i, $a := .Modes}}
+                {{if eq $i .User.OsuSettings.Mode}}
+                  <option value="{{$i}}" selected>{{$a}}</option>
+                {{else}}
+                  <option value="{{$i}}">{{$a}}</option>
+                {{end}}
+              {{end}}
+            </select>
+            <button type='submit' class='btn btn-success btn-lg'>
+              {{.Translations.UpdateSettings}}
+            </button>
+          </form>
+          <form action='/settings/disable' method='post'>
+            <button type='submit' class='btn btn-success btn-sm'>
+              {{.Translations.DisableTweetPosting}}
+            </button>
+          </form>
+          {{else}}
+          <form action='/settings/enable' method='post'>
+            <button type='submit' class='btn btn-success btn-lg'>
+              {{.Translations.EnableTweetPosting}}
+            </button>
+          </form>
+          {{end}}
         </div>
         <div class='col-sm-1 col-md-3'></div>
       </div>

@@ -37,3 +37,31 @@ other = "Enabled"
 [SettingsPageTweetPostingStatusDisabled]
 description = "Text saying Disabled"
 other = "Disabled"
+
+[SettingsPageOsuUsernameText]
+description = "Text telling the user that the input field below is for their osu! username"
+other = "Your osu! Username"
+
+[SettingsPageOsuUsernamePlaceholder]
+description = "Placeholder for input where people put their osu! username"
+other = "osu! username"
+
+[SettingsPageDisableTweetPostingButton]
+description = "Text for the button that the users would click to disable Tweet posting"
+other = "Disable Tweet Posting"
+
+[SettingsPageEnableTweetPostingButton]
+description = "Text for the button that the users would click to enable Tweet posting"
+other = "Enable Tweet Posting"
+
+[SettingsPageGameModeText]
+description = "Text telling the user that the select box is for the selected game mode"
+other = "Game Mode"
+
+[SettingsPageUpdateSettingsButton]
+description = "Text for the button to update settings"
+other = "Update Settings"
+
+[SettingsPageNoDataWarning]
+description = "Text that tells the user that they need to enter and save a username, or else tweets won't be posted to their account"
+other = "You must enter and save an osu! username before tweets will begin to post"
