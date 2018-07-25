@@ -134,6 +134,14 @@ func main() {
 
 	r.Get("/favicon.ico", ServeFavicon)
 
+	// LoaderIO Configuration
+	loaderIoKey := os.Getenv("LOADERIO_KEY")
+	if loaderIoKey != "" {
+		r.Get("/"+loaderIoKey+".txt", func(w http.ResponseWriter, r *http.Request) {
+			fmt.Fprintf(w, loaderIoKey)
+		})
+	}
+
 	r.NotFound(notFound)
 
 	// Set up translator
