@@ -10,7 +10,7 @@ type OsuPlayer struct {
 	bongo.DocumentBase `bson:",inline"`
 	UserID             int      `bson:"userid"`
 	PlayerName         string   `bson:"name"`
-	LastChecked        int      `bson:"lastChecked"`
+	LastChecked        int64    `bson:"lastChecked"`
 	Modes              OsuModes `bson:"modes"`
 }
 
