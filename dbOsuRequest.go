@@ -9,7 +9,7 @@ import (
 type OsuRequest struct {
 	bongo.DocumentBase `bson:",inline"`
 	OsuPlayer          bson.ObjectId  `bson:"player"`
-	DateChecked        int            `bson:"dateChecked"`
+	DateChecked        int64          `bson:"dateChecked"`
 	Data               OsuRequestData `bson:"data"`
 }
 
