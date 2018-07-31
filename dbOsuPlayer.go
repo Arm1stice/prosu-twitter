@@ -8,7 +8,7 @@ import (
 // OsuPlayer - A player registered with osu!
 type OsuPlayer struct {
 	bongo.DocumentBase `bson:",inline"`
-	UserID             int      `bson:"userid"`
+	UserID             string   `bson:"userid"`
 	PlayerName         string   `bson:"name"`
 	LastChecked        int64    `bson:"lastChecked"`
 	Modes              OsuModes `bson:"modes"`
