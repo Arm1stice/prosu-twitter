@@ -8,6 +8,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/wcalandro/osuapi-go"
+
 	"github.com/BurntSushi/toml"
 	"github.com/globalsign/mgo/bson"
 	"golang.org/x/text/language"
@@ -55,6 +57,9 @@ var connection *bongo.Connection
 
 // i18n bundle
 var bundle *i18n.Bundle
+
+// osu! api
+var api osuapi.API
 
 func init() {
 	/* First, setting up logging */
@@ -111,6 +116,8 @@ func init() {
 
 	connection = conn
 
+	osuAPIKey := os.Getenv("OSU_API_KEY")
+	api = osuapi.NewAPI(osuAPIKey)
 }
 
 func main() {
