@@ -64,4 +64,4 @@ other = "Update Settings"
 
 [SettingsPageNoDataWarning]
 description = "Text that tells the user that they need to enter and save a username, or else tweets won't be posted to their account"
-other = "You must enter and save an osu! username before tweets will begin to post"
+other = "You must save an osu! username before tweets will begin to post"
