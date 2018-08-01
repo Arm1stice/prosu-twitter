@@ -37,3 +37,9 @@ func routeError(w http.ResponseWriter, e string, err error, rID string, code int
 	w.WriteHeader(code)
 	templates.ExecuteTemplate(w, "Error.html", data)
 }
+
+func captureError(err error) {
+	if environment == "production" {
+		raven.CaptureError(err, nil)
+	}
+}
