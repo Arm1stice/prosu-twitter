@@ -31,6 +31,8 @@ func routeError(w http.ResponseWriter, e string, err error, rID string, code int
 	if err.Error() != "User Error" {
 		if environment == "production" {
 			raven.CaptureError(err, nil)
+		} else {
+			panic(err)
 		}
 	}
 
@@ -41,5 +43,7 @@ func routeError(w http.ResponseWriter, e string, err error, rID string, code int
 func captureError(err error) {
 	if environment == "production" {
 		raven.CaptureError(err, nil)
+	} else {
+		panic(err)
 	}
 }

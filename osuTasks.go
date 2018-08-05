@@ -1,25 +1,30 @@
 package main
 
 import (
+	"context"
+
 	osuapi "github.com/wcalandro/osuapi-go"
 	"golang.org/x/time/rate"
 )
 
 type osuRateLimiter struct {
-	API         osuapi.API
-	RateLimiter *rate.Limiter
+	API osuapi.API
 }
 
-const limit float64 = 250 / 60 // 250 API Calls every 60 seconds
+var limit rate.Limit
+var rLimiter *rate.Limiter
 
+func init() {
+	limit = rate.Limit(250 / 60) // 250 API Calls every 60 seconds
+	rLimiter = rate.NewLimiter(limit, 10)
+}
 func newOsuLimiter(api osuapi.API) osuRateLimiter {
 	return osuRateLimiter{
-		API:         api,
-		RateLimiter: rate.NewLimiter(rate.Limit(limit), 10),
+		API: api,
 	}
 }
 
 func (limiter osuRateLimiter) GetUser(options osuapi.M) (*osuapi.User, error) {
-	limiter.RateLimiter.Wait(nil)
+	rLimiter.Wait(context.Background())
 	return limiter.API.GetUser(options)
 }

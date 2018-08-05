@@ -92,6 +92,7 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 
 	errorFlashes := session.Flashes("settings_error")
 	successFlashes := session.Flashes("settings_success")
+	session.Save(r, w)
 	pageData := settingsPageData{
 		User:            user,
 		OsuPlayer:       player,
@@ -202,6 +203,7 @@ func enableTweetPosting(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user.OsuSettings.Enabled = true
+	log.Debug("User " + user.Twitter.Profile.Handle + " just enabled Tweet posting!")
 	err := connection.Collection("usermodels").Save(&user)
 	if err != nil {
 		routeError(w, "Error saving user when enabling tweets", err, middleware.GetReqID(ctx), 500)
@@ -244,6 +246,7 @@ func disableTweetPosting(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user.OsuSettings.Enabled = false
+	log.Debug("User " + user.Twitter.Profile.Handle + " just disabled Tweet posting!")
 	err := connection.Collection("usermodels").Save(&user)
 	if err != nil {
 		routeError(w, "Error saving user when disabling tweets", err, middleware.GetReqID(ctx), 500)
@@ -281,6 +284,7 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user = *ctx.Value("user").(*User)
+	log.Debug("User " + user.Twitter.Profile.Handle + " is trying to update their settings....")
 	if user.OsuSettings.Enabled == false {
 		http.Redirect(w, r, "/settings", 302)
 		return
@@ -327,8 +331,10 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 	dbOsuPlayer := &OsuPlayer{}
 	err = connection.Collection("osuplayermodels").FindOne(bson.M{"userid": osuPlayer.UserID}, dbOsuPlayer)
 
+	// We got some kind of error, either a database error or the player couldn't be found in our database
 	if err != nil {
 		if _, ok := err.(*bongo.DocumentNotFoundError); ok {
+			log.Debug("User " + user.Twitter.Profile.Handle + " osu!player " + playerName + "(" + osuPlayer.UserID + ") doesn't exist in the database, adding...")
 			// Player isn't in the database yet.
 			dbOsuPlayer.UserID = osuPlayer.UserID
 			dbOsuPlayer.PlayerName = osuPlayer.Username
@@ -416,7 +422,7 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			}
 			user.OsuSettings.Player = dbOsuPlayer.GetId()
 			user.OsuSettings.Mode = modeNumber
-			err = connection.Collection("osuplayermodels").Save(dbOsuPlayer)
+			err = connection.Collection("usermodels").Save(&user)
 			if err != nil {
 				captureError(err)
 				session.AddFlash("Error saving final settings", "settings_error")
@@ -424,13 +430,401 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 				http.Redirect(w, r, "/settings", 302)
 				return
 			}
-		} else {
-			captureError(err)
-			session.AddFlash("Error checking if the user already exists in the database", "settings_error")
+			log.Debug("User " + user.Twitter.Profile.Handle + " successfully added user to database and changed their mode to " + allOsuModes[modeNumber])
+			session.AddFlash("Successfully updated settings", "settings_success")
 			session.Save(r, w)
 			http.Redirect(w, r, "/settings", 302)
 			return
 		}
+		captureError(err)
+		session.AddFlash("Error checking if the user already exists in the database", "settings_error")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
 	}
+	// The player could be found in the database, now we have to check if they have a recent osu! API request saved to their user for their selected game mode. If so, we don't want to save more data.
+	log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " exists in the database, checking to see if we have recent data for mode " + strconv.Itoa(modeNumber))
 
+	if modeNumber == 0 {
+		// Standard
+
+		// First check if they have any requests for this game mode at all
+		if len(dbOsuPlayer.Modes.Standard.Checks) != 0 {
+			lastRequest := &OsuRequest{}
+			err = connection.Collection("osurequestmodels").FindById(dbOsuPlayer.Modes.Standard.Checks[len(dbOsuPlayer.Modes.Standard.Checks)-1], lastRequest)
+			if err != nil {
+				captureError(err)
+				session.AddFlash("Error getting info about the last data entry for the requested player", "settings_error")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
+				user.OsuSettings.Player = dbOsuPlayer.GetId()
+				user.OsuSettings.Mode = modeNumber
+				err = connection.Collection("usermodels").Save(&user)
+				if err != nil {
+					captureError(err)
+					session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!standard", "settings_error")
+					session.Save(r, w)
+					http.Redirect(w, r, "/settings", 302)
+					return
+				}
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+				session.AddFlash("Successfully updated settings", "settings_success")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " doesn't have recent data for mode " + strconv.Itoa(modeNumber) + ". Saving data, settings, and returning")
+		// They don't have any recent checks saved, we have to save one
+		osuRequest := &OsuRequest{
+			OsuPlayer:   dbOsuPlayer.GetId(),
+			DateChecked: time.Now().Unix(),
+			Data: OsuRequestData{
+				PlayerID:   osuPlayer.UserID,
+				PlayerName: osuPlayer.Username,
+				Counts: requestDataCounts{
+					Count50s:  osuPlayer.Count50,
+					Count100s: osuPlayer.Count100,
+					Count300s: osuPlayer.Count300,
+					SS:        osuPlayer.CountRankSS + osuPlayer.CountRankSSH,
+					S:         osuPlayer.CountRankS + osuPlayer.CountRankSH,
+					A:         osuPlayer.CountRankA,
+					Plays:     osuPlayer.Playcount,
+				},
+				Scores: requestDataScores{
+					Ranked: osuPlayer.RankedScore,
+					Total:  osuPlayer.TotalScore,
+				},
+				PP: requestDataPP{
+					Raw:         osuPlayer.PP,
+					Rank:        osuPlayer.GlobalRank,
+					CountryRank: osuPlayer.CountryRank,
+				},
+				Country:  osuPlayer.Country,
+				Level:    osuPlayer.Level,
+				Accuracy: osuPlayer.Accuracy,
+			},
+		}
+		err = connection.Collection("osurequestmodels").Save(osuRequest)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error saving new data entry for osu!standard", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		dbOsuPlayer.Modes.Standard.Checks = append(dbOsuPlayer.Modes.Standard.Checks, osuRequest.GetId())
+		err = connection.Collection("osuplayermodels").Save(dbOsuPlayer)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error osu! player with updated data", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		user.OsuSettings.Player = dbOsuPlayer.GetId()
+		user.OsuSettings.Mode = modeNumber
+		err = connection.Collection("usermodels").Save(&user)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error updating information for user", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+		session.AddFlash("Successfully updated settings", "settings_success")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	} else if modeNumber == 1 {
+		// Taiko
+		// First check if they have any requests for this game mode at all
+		if len(dbOsuPlayer.Modes.Taiko.Checks) != 0 {
+			lastRequest := &OsuRequest{}
+			err = connection.Collection("osurequestmodels").FindById(dbOsuPlayer.Modes.Taiko.Checks[len(dbOsuPlayer.Modes.Taiko.Checks)-1], lastRequest)
+			if err != nil {
+				captureError(err)
+				session.AddFlash("Error getting info about the last data entry for the requested player", "settings_error")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
+				user.OsuSettings.Player = dbOsuPlayer.GetId()
+				user.OsuSettings.Mode = modeNumber
+				err = connection.Collection("usermodels").Save(&user)
+				if err != nil {
+					captureError(err)
+					session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!taiko", "settings_error")
+					session.Save(r, w)
+					http.Redirect(w, r, "/settings", 302)
+					return
+				}
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+				session.AddFlash("Successfully updated settings", "settings_success")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " doesn't have recent data for mode " + strconv.Itoa(modeNumber) + ". Saving data, settings, and returning")
+		// They don't have any recent checks saved, we have to save one
+		osuRequest := &OsuRequest{
+			OsuPlayer:   dbOsuPlayer.GetId(),
+			DateChecked: time.Now().Unix(),
+			Data: OsuRequestData{
+				PlayerID:   osuPlayer.UserID,
+				PlayerName: osuPlayer.Username,
+				Counts: requestDataCounts{
+					Count50s:  osuPlayer.Count50,
+					Count100s: osuPlayer.Count100,
+					Count300s: osuPlayer.Count300,
+					SS:        osuPlayer.CountRankSS + osuPlayer.CountRankSSH,
+					S:         osuPlayer.CountRankS + osuPlayer.CountRankSH,
+					A:         osuPlayer.CountRankA,
+					Plays:     osuPlayer.Playcount,
+				},
+				Scores: requestDataScores{
+					Ranked: osuPlayer.RankedScore,
+					Total:  osuPlayer.TotalScore,
+				},
+				PP: requestDataPP{
+					Raw:         osuPlayer.PP,
+					Rank:        osuPlayer.GlobalRank,
+					CountryRank: osuPlayer.CountryRank,
+				},
+				Country:  osuPlayer.Country,
+				Level:    osuPlayer.Level,
+				Accuracy: osuPlayer.Accuracy,
+			},
+		}
+		err = connection.Collection("osurequestmodels").Save(osuRequest)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error saving new data entry for osu!taiko", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		dbOsuPlayer.Modes.Taiko.Checks = append(dbOsuPlayer.Modes.Taiko.Checks, osuRequest.GetId())
+		err = connection.Collection("osuplayermodels").Save(dbOsuPlayer)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error osu! player with updated data", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		user.OsuSettings.Player = dbOsuPlayer.GetId()
+		user.OsuSettings.Mode = modeNumber
+		err = connection.Collection("usermodels").Save(&user)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error updating information for user", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+		session.AddFlash("Successfully updated settings", "settings_success")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	} else if modeNumber == 2 {
+		// CTB
+		// First check if they have any requests for this game mode at all
+		if len(dbOsuPlayer.Modes.CTB.Checks) != 0 {
+			lastRequest := &OsuRequest{}
+			err = connection.Collection("osurequestmodels").FindById(dbOsuPlayer.Modes.CTB.Checks[len(dbOsuPlayer.Modes.CTB.Checks)-1], lastRequest)
+			if err != nil {
+				captureError(err)
+				session.AddFlash("Error getting info about the last data entry for the requested player", "settings_error")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
+				user.OsuSettings.Player = dbOsuPlayer.GetId()
+				user.OsuSettings.Mode = modeNumber
+				err = connection.Collection("usermodels").Save(&user)
+				if err != nil {
+					captureError(err)
+					session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!catch", "settings_error")
+					session.Save(r, w)
+					http.Redirect(w, r, "/settings", 302)
+					return
+				}
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+				session.AddFlash("Successfully updated settings", "settings_success")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " doesn't have recent data for mode " + strconv.Itoa(modeNumber) + ". Saving data, settings, and returning")
+		// They don't have any recent checks saved, we have to save one
+		osuRequest := &OsuRequest{
+			OsuPlayer:   dbOsuPlayer.GetId(),
+			DateChecked: time.Now().Unix(),
+			Data: OsuRequestData{
+				PlayerID:   osuPlayer.UserID,
+				PlayerName: osuPlayer.Username,
+				Counts: requestDataCounts{
+					Count50s:  osuPlayer.Count50,
+					Count100s: osuPlayer.Count100,
+					Count300s: osuPlayer.Count300,
+					SS:        osuPlayer.CountRankSS + osuPlayer.CountRankSSH,
+					S:         osuPlayer.CountRankS + osuPlayer.CountRankSH,
+					A:         osuPlayer.CountRankA,
+					Plays:     osuPlayer.Playcount,
+				},
+				Scores: requestDataScores{
+					Ranked: osuPlayer.RankedScore,
+					Total:  osuPlayer.TotalScore,
+				},
+				PP: requestDataPP{
+					Raw:         osuPlayer.PP,
+					Rank:        osuPlayer.GlobalRank,
+					CountryRank: osuPlayer.CountryRank,
+				},
+				Country:  osuPlayer.Country,
+				Level:    osuPlayer.Level,
+				Accuracy: osuPlayer.Accuracy,
+			},
+		}
+		err = connection.Collection("osurequestmodels").Save(osuRequest)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error saving new data entry for osu!catch", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		dbOsuPlayer.Modes.CTB.Checks = append(dbOsuPlayer.Modes.CTB.Checks, osuRequest.GetId())
+		err = connection.Collection("osuplayermodels").Save(dbOsuPlayer)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error osu! player with updated data", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		user.OsuSettings.Player = dbOsuPlayer.GetId()
+		user.OsuSettings.Mode = modeNumber
+		err = connection.Collection("usermodels").Save(&user)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error updating information for user", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+		session.AddFlash("Successfully updated settings", "settings_success")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	} else if modeNumber == 3 {
+		// Mania
+		// First check if they have any requests for this game mode at all
+		if len(dbOsuPlayer.Modes.Mania.Checks) != 0 {
+			lastRequest := &OsuRequest{}
+			err = connection.Collection("osurequestmodels").FindById(dbOsuPlayer.Modes.Mania.Checks[len(dbOsuPlayer.Modes.Mania.Checks)-1], lastRequest)
+			if err != nil {
+				captureError(err)
+				session.AddFlash("Error getting info about the last data entry for the requested player", "settings_error")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
+				user.OsuSettings.Player = dbOsuPlayer.GetId()
+				user.OsuSettings.Mode = modeNumber
+				err = connection.Collection("usermodels").Save(&user)
+				if err != nil {
+					captureError(err)
+					session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!mania", "settings_error")
+					session.Save(r, w)
+					http.Redirect(w, r, "/settings", 302)
+					return
+				}
+				log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+				session.AddFlash("Successfully updated settings", "settings_success")
+				session.Save(r, w)
+				http.Redirect(w, r, "/settings", 302)
+				return
+			}
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " doesn't have recent data for mode " + strconv.Itoa(modeNumber) + ". Saving data, settings, and returning")
+		// They don't have any recent checks saved, we have to save one
+		osuRequest := &OsuRequest{
+			OsuPlayer:   dbOsuPlayer.GetId(),
+			DateChecked: time.Now().Unix(),
+			Data: OsuRequestData{
+				PlayerID:   osuPlayer.UserID,
+				PlayerName: osuPlayer.Username,
+				Counts: requestDataCounts{
+					Count50s:  osuPlayer.Count50,
+					Count100s: osuPlayer.Count100,
+					Count300s: osuPlayer.Count300,
+					SS:        osuPlayer.CountRankSS + osuPlayer.CountRankSSH,
+					S:         osuPlayer.CountRankS + osuPlayer.CountRankSH,
+					A:         osuPlayer.CountRankA,
+					Plays:     osuPlayer.Playcount,
+				},
+				Scores: requestDataScores{
+					Ranked: osuPlayer.RankedScore,
+					Total:  osuPlayer.TotalScore,
+				},
+				PP: requestDataPP{
+					Raw:         osuPlayer.PP,
+					Rank:        osuPlayer.GlobalRank,
+					CountryRank: osuPlayer.CountryRank,
+				},
+				Country:  osuPlayer.Country,
+				Level:    osuPlayer.Level,
+				Accuracy: osuPlayer.Accuracy,
+			},
+		}
+		err = connection.Collection("osurequestmodels").Save(osuRequest)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error saving new data entry for osu!mania", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		dbOsuPlayer.Modes.Mania.Checks = append(dbOsuPlayer.Modes.Mania.Checks, osuRequest.GetId())
+		err = connection.Collection("osuplayermodels").Save(dbOsuPlayer)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error osu! player with updated data", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		user.OsuSettings.Player = dbOsuPlayer.GetId()
+		user.OsuSettings.Mode = modeNumber
+		err = connection.Collection("usermodels").Save(&user)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error updating information for user", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+		session.AddFlash("Successfully updated settings", "settings_success")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	}
 }

@@ -143,6 +143,7 @@ func main() {
 	r.Get("/settings", routeSettings)
 	r.Post("/settings/enable", enableTweetPosting)
 	r.Post("/settings/disable", disableTweetPosting)
+	r.Post("/settings/update", updateSettings)
 	//FileServer(r, "/assets", http.Dir("./static"))
 
 	r.Get("/favicon.ico", ServeFavicon)

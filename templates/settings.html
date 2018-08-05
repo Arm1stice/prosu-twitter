@@ -48,7 +48,7 @@
             {{if eq .User.OsuSettings.Player ""}}
             <input type="text" class="form-control" id="osu_username" name="osu_username" placeholder={{.Translations.OsuUsernamePlaceholder}} autocomplete="off" style="cursor: auto;">
             {{else}}
-            <input type="text" class="form-control" value={{.OsuPlayer.Username}} id="osu_username" name="osu_username" placeholder={{.Translations.OsuUsernamePlaceholder}} autocomplete="off" style="cursor: auto;">
+            <input type="text" class="form-control" value={{.OsuPlayer.PlayerName}} id="osu_username" name="osu_username" placeholder={{.Translations.OsuUsernamePlaceholder}} autocomplete="off" style="cursor: auto;">
             {{end}}
             <br>
             <p style='font-size: 20px'>{{.Translations.GameModeText}}</p>
