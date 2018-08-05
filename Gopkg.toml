@@ -73,3 +73,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/getsentry/raven-go"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/time"
