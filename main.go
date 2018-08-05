@@ -59,7 +59,7 @@ var connection *bongo.Connection
 var bundle *i18n.Bundle
 
 // osu! api
-var api osuapi.API
+var api osuRateLimiter
 
 func init() {
 	/* First, setting up logging */
@@ -117,7 +117,7 @@ func init() {
 	connection = conn
 
 	osuAPIKey := os.Getenv("OSU_API_KEY")
-	api = osuapi.NewAPI(osuAPIKey)
+	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey))
 }
 
 func main() {
