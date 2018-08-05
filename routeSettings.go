@@ -403,14 +403,14 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 				// osu! standard
 				dbOsuPlayer.Modes.Standard.Checks = append(dbOsuPlayer.Modes.Standard.Checks, osuRequest.GetId())
 			} else if modeNumber == 1 {
-				// osu! mania
-				dbOsuPlayer.Modes.Mania.Checks = append(dbOsuPlayer.Modes.Mania.Checks, osuRequest.GetId())
-			} else if modeNumber == 2 {
 				// osu! taiko
 				dbOsuPlayer.Modes.Taiko.Checks = append(dbOsuPlayer.Modes.Taiko.Checks, osuRequest.GetId())
-			} else if modeNumber == 3 {
+			} else if modeNumber == 2 {
 				// osu! catch
 				dbOsuPlayer.Modes.CTB.Checks = append(dbOsuPlayer.Modes.CTB.Checks, osuRequest.GetId())
+			} else if modeNumber == 3 {
+				// osu! mania
+				dbOsuPlayer.Modes.Mania.Checks = append(dbOsuPlayer.Modes.Mania.Checks, osuRequest.GetId())
 			}
 			err = connection.Collection("osuplayermodels").Save(dbOsuPlayer)
 			if err != nil {
