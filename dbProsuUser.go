@@ -63,9 +63,11 @@ func findOrCreateUser(twitterUser anaconda.User, accessToken *oauth.AccessToken)
 			log.Debug("We didn't find an existing user for @" + twitterUser.ScreenName + ". We have to create one.")
 			newUser := &User{
 				OsuSettings: OsuSettings{
-					Player:  "",
-					Mode:    0,
-					Enabled: false,
+					Player:        "",
+					Mode:          0,
+					Enabled:       false,
+					PostFrequency: 0,
+					HourToPost:    0,
 				},
 				TweetHistory: []UserTweet{},
 				Twitter: TwitterUser{
