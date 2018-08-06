@@ -117,99 +117,6 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "settings.html", pageData)
 }
 
-func translateSettingsPage(localizer *i18n.Localizer, isAuthenticated bool, user User) settingsPageTranslations {
-	navbar := translateNavbar(localizer, isAuthenticated, user)
-
-	settingsHeaderText := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageSettingsHeader",
-	})
-
-	settingsTweetPostingText := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageTweetPostingText",
-	})
-
-	settingsTweetPostingEnabled := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageTweetPostingStatusEnabled",
-	})
-
-	settingsTweetPostingDisabled := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageTweetPostingStatusDisabled",
-	})
-
-	settingsOsuUsernameText := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageOsuUsernameText",
-	})
-
-	settingsOsuUsernamePlaceholder := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageOsuUsernamePlaceholder",
-	})
-
-	settingsEnableTweetPosting := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageEnableTweetPostingButton",
-	})
-
-	settingsDisableTweetPosting := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageDisableTweetPostingButton",
-	})
-
-	gameModeText := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageGameModeText",
-	})
-
-	updateSettings := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageUpdateSettingsButton",
-	})
-
-	noDataWarning := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPageNoDataWarning",
-	})
-
-	hourToPostLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsHourToPostLabel",
-	})
-
-	postFrequencyLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPostFrequencyLabel",
-	})
-
-	postFrequencyDaily := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPostFrequencyDaily",
-	})
-
-	postFrequencyWeekly := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPostFrequencyWeekly",
-	})
-
-	postFrequencyMonthly := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsPostFrequencyMonthly",
-	})
-
-	currentUTCTimeLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: "SettingsCurrentUTCTimeLabel",
-	})
-
-	return settingsPageTranslations{
-		Navbar:                     navbar,
-		SettingsHeader:             settingsHeaderText,
-		TweetPostingText:           settingsTweetPostingText,
-		TweetPostingStatusEnabled:  settingsTweetPostingEnabled,
-		TweetPostingStatusDisabled: settingsTweetPostingDisabled,
-		EnableTweetPosting:         settingsEnableTweetPosting,
-		DisableTweetPosting:        settingsDisableTweetPosting,
-		OsuUsernameText:            settingsOsuUsernameText,
-		OsuUsernamePlaceholder:     settingsOsuUsernamePlaceholder,
-		GameModeText:               gameModeText,
-		UpdateSettingsButton:       updateSettings,
-		NoDataWarning:              noDataWarning,
-		HourToPostLabel:            hourToPostLabel,
-		PostFrequencyLabel:         postFrequencyLabel,
-		PostFrequencyDaily:         postFrequencyDaily,
-		PostFrequencyWeekly:        postFrequencyWeekly,
-		PostFrequencyMonthly:       postFrequencyMonthly,
-		CurrentUTCTimeLabel:        currentUTCTimeLabel,
-	}
-}
-
 func enableTweetPosting(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	sessionError := ctx.Value("session_error").(string)
@@ -860,5 +767,98 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 		session.Save(r, w)
 		http.Redirect(w, r, "/settings", 302)
 		return
+	}
+}
+
+func translateSettingsPage(localizer *i18n.Localizer, isAuthenticated bool, user User) settingsPageTranslations {
+	navbar := translateNavbar(localizer, isAuthenticated, user)
+
+	settingsHeaderText := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageSettingsHeader",
+	})
+
+	settingsTweetPostingText := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageTweetPostingText",
+	})
+
+	settingsTweetPostingEnabled := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageTweetPostingStatusEnabled",
+	})
+
+	settingsTweetPostingDisabled := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageTweetPostingStatusDisabled",
+	})
+
+	settingsOsuUsernameText := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageOsuUsernameText",
+	})
+
+	settingsOsuUsernamePlaceholder := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageOsuUsernamePlaceholder",
+	})
+
+	settingsEnableTweetPosting := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageEnableTweetPostingButton",
+	})
+
+	settingsDisableTweetPosting := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageDisableTweetPostingButton",
+	})
+
+	gameModeText := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageGameModeText",
+	})
+
+	updateSettings := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageUpdateSettingsButton",
+	})
+
+	noDataWarning := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPageNoDataWarning",
+	})
+
+	hourToPostLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsHourToPostLabel",
+	})
+
+	postFrequencyLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyLabel",
+	})
+
+	postFrequencyDaily := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyDaily",
+	})
+
+	postFrequencyWeekly := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyWeekly",
+	})
+
+	postFrequencyMonthly := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyMonthly",
+	})
+
+	currentUTCTimeLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsCurrentUTCTimeLabel",
+	})
+
+	return settingsPageTranslations{
+		Navbar:                     navbar,
+		SettingsHeader:             settingsHeaderText,
+		TweetPostingText:           settingsTweetPostingText,
+		TweetPostingStatusEnabled:  settingsTweetPostingEnabled,
+		TweetPostingStatusDisabled: settingsTweetPostingDisabled,
+		EnableTweetPosting:         settingsEnableTweetPosting,
+		DisableTweetPosting:        settingsDisableTweetPosting,
+		OsuUsernameText:            settingsOsuUsernameText,
+		OsuUsernamePlaceholder:     settingsOsuUsernamePlaceholder,
+		GameModeText:               gameModeText,
+		UpdateSettingsButton:       updateSettings,
+		NoDataWarning:              noDataWarning,
+		HourToPostLabel:            hourToPostLabel,
+		PostFrequencyLabel:         postFrequencyLabel,
+		PostFrequencyDaily:         postFrequencyDaily,
+		PostFrequencyWeekly:        postFrequencyWeekly,
+		PostFrequencyMonthly:       postFrequencyMonthly,
+		CurrentUTCTimeLabel:        currentUTCTimeLabel,
 	}
 }
