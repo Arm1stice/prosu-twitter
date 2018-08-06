@@ -248,6 +248,15 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check to see if the player name field was filled out
+	playerName := r.Form.Get("osu_username")
+	if len(playerName) == 0 {
+		session.AddFlash("The player name cannot be empty", "settings_error")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	}
+
 	// Check that the mode is valid
 	modeNumber, err := strconv.Atoi(r.Form.Get("game_mode"))
 	if err != nil {
@@ -264,8 +273,39 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 	}
 	user.OsuSettings.Mode = modeNumber
 
+	// Check the hour to post field is valid
+	hourToPostValue, err := strconv.Atoi(r.Form.Get("hour_to_post"))
+	if err != nil {
+		session.AddFlash("Invalid hour", "settings_error")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	}
+	if hourToPostValue < 0 || hourToPostValue > 23 {
+		session.AddFlash("Invalid hour", "settings_error")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	}
+	user.OsuSettings.HourToPost = hourToPostValue
+
+	// Check the post frequency field is valid
+	postFrequencyValue, err := strconv.Atoi(r.Form.Get("post_frequency"))
+	if err != nil {
+		session.AddFlash("Invalid frequency", "settings_error")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	}
+	if postFrequencyValue < 0 || postFrequencyValue > 2 {
+		session.AddFlash("Invalid frequency", "settings_error")
+		session.Save(r, w)
+		http.Redirect(w, r, "/settings", 302)
+		return
+	}
+	user.OsuSettings.PostFrequency = postFrequencyValue
+
 	// Get osu! player information
-	playerName := r.Form.Get("osu_username")
 	osuPlayer, err := api.GetUser(osuapi.M{"u": playerName, "m": strconv.Itoa(modeNumber)})
 
 	if err != nil {
