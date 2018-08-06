@@ -19,9 +19,11 @@ type User struct {
 
 // OsuSettings - The osu-related settings for a user in Prosu
 type OsuSettings struct {
-	Player  bson.ObjectId `bson:"player,omitempty"`
-	Mode    int           `bson:"mode"`
-	Enabled bool          `bson:"enabled"`
+	Player        bson.ObjectId `bson:"player,omitempty"`
+	Mode          int           `bson:"mode"`
+	Enabled       bool          `bson:"enabled"`
+	HourToPost    int           `bson:"hourToPost"`
+	PostFrequency int           `bson:"postFrequency"` // 0 = Daily, 1 = Weekly, 2 = Monthly
 }
 
 // UserTweet - A tweet object
@@ -61,9 +63,11 @@ func findOrCreateUser(twitterUser anaconda.User, accessToken *oauth.AccessToken)
 			log.Debug("We didn't find an existing user for @" + twitterUser.ScreenName + ". We have to create one.")
 			newUser := &User{
 				OsuSettings: OsuSettings{
-					Player:  "",
-					Mode:    0,
-					Enabled: false,
+					Player:        "",
+					Mode:          0,
+					Enabled:       false,
+					PostFrequency: 0,
+					HourToPost:    0,
 				},
 				TweetHistory: []UserTweet{},
 				Twitter: TwitterUser{

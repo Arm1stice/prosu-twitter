@@ -21,3 +21,71 @@ other = "Edit Settings"
 [NotFoundText]
 description = "Tells the user that the page they are looking for can't be found"
 other = "Page Not Found"
+
+[SettingsPageSettingsHeader]
+description = "The header for the page"
+other = "Settings"
+
+[SettingsPageTweetPostingText]
+description = "The text that goes before the text saying whether they have tweets enabled"
+other = "Tweet Posting:"
+
+[SettingsPageTweetPostingStatusEnabled]
+description = "Text saying Enabled"
+other = "Enabled"
+
+[SettingsPageTweetPostingStatusDisabled]
+description = "Text saying Disabled"
+other = "Disabled"
+
+[SettingsPageOsuUsernameText]
+description = "Text telling the user that the input field below is for their osu! username"
+other = "Your osu! Username"
+
+[SettingsPageOsuUsernamePlaceholder]
+description = "Placeholder for input where people put their osu! username"
+other = "osu! username"
+
+[SettingsPageDisableTweetPostingButton]
+description = "Text for the button that the users would click to disable Tweet posting"
+other = "Disable Tweet Posting"
+
+[SettingsPageEnableTweetPostingButton]
+description = "Text for the button that the users would click to enable Tweet posting"
+other = "Enable Tweet Posting"
+
+[SettingsPageGameModeText]
+description = "Text telling the user that the select box is for the selected game mode"
+other = "Game Mode"
+
+[SettingsPageUpdateSettingsButton]
+description = "Text for the button to update settings"
+other = "Update Settings"
+
+[SettingsPageNoDataWarning]
+description = "Text that tells the user that they need to enter and save a username, or else tweets won't be posted to their account"
+other = "You must save an osu! username before tweets will begin to post"
+
+[SettingsHourToPostLabel]
+description = "Label telling users that the below field is for hour in which to post the tweet in UTC Time."
+other = "Hour to Post Tweet (UTC Time)"
+
+[SettingsPostFrequencyLabel]
+description = "Label telling users that the below field is for the frequency in which tweets are posted."
+other = "Post Frequency"
+
+[SettingsPostFrequencyDaily]
+description = "Option for users to select which indicates that the post frequency will be Daily"
+other = "Daily"
+
+[SettingsPostFrequencyWeekly]
+description = "Option for users to select which indicates that the post frequency will be Weekly"
+other = "Weekly"
+
+[SettingsPostFrequencyMonthly]
+description = "Option for users to select which indicates that the post frequency will be Monthly"
+other = "Monthly"
+
+[SettingsCurrentUTCTimeLabel]
+description = "Tells the user that the below paragraph displays the current UTC time, as reference"
+other = "Current UTC Time"

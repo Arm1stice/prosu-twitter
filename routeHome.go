@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/globalsign/mgo/bson"
@@ -68,7 +69,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		routeError(w, "Error getting user session", reqID, http.StatusInternalServerError)
+		routeError(w, "Error getting user session", errors.New(sessionError), reqID, 500)
 		return
 	}
 	session := ctx.Value("session").(*sessions.Session)
@@ -80,7 +81,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			log.Error("There was an error getting the user's account info")
 			log.Error(userError)
 			reqID := middleware.GetReqID(ctx)
-			routeError(w, "Error getting user account info", reqID, http.StatusInternalServerError)
+			routeError(w, "Error getting user account info", errors.New(userError), reqID, 500)
 			return
 		}
 		user = *ctx.Value("user").(*User)

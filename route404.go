@@ -27,7 +27,7 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 		log.Error("There was an error getting the user's session")
 		log.Error(sessionError)
 		reqID := middleware.GetReqID(ctx)
-		http.Error(w, "Error getting user session\nRequestID: "+reqID, http.StatusInternalServerError)
+		http.Error(w, "Error getting user session\nRequestID: "+reqID, 500)
 		return
 	}
 	session := ctx.Value("session").(*sessions.Session)
@@ -39,7 +39,7 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 			log.Error("There was an error getting the user's account info")
 			log.Error(userError)
 			reqID := middleware.GetReqID(ctx)
-			http.Error(w, "Error getting user account info\nRequestID: "+reqID, http.StatusInternalServerError)
+			http.Error(w, "Error getting user account info\nRequestID: "+reqID, 500)
 			return
 		}
 		user = *ctx.Value("user").(*User)
@@ -59,7 +59,7 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 		Translations:    translations,
 	}
 
-	w.WriteHeader(http.StatusNotFound)
+	w.WriteHeader(404)
 	templates.ExecuteTemplate(w, "404.html", pageData)
 }
 
