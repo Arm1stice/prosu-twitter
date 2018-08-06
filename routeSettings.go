@@ -24,6 +24,8 @@ type settingsPageData struct {
 	Modes           [4]string
 	ErrorFlash      []interface{}
 	SuccessFlash    []interface{}
+	Frequencies     [3]string
+	Hours           [24]string
 }
 
 type settingsPageTranslations struct {
@@ -39,9 +41,16 @@ type settingsPageTranslations struct {
 	GameModeText               string
 	UpdateSettingsButton       string
 	NoDataWarning              string
+	HourToPostLabel            string
+	PostFrequencyLabel         string
+	PostFrequencyDaily         string
+	PostFrequencyWeekly        string
+	PostFrequencyMonthly       string
+	CurrentUTCTimeLabel        string
 }
 
 var allOsuModes = [4]string{"osu!standard", "osu!taiko", "osu!catch", "osu!mania"}
+var hours = [24]string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}
 
 func routeSettings(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -101,6 +110,8 @@ func routeSettings(w http.ResponseWriter, r *http.Request) {
 		Modes:           allOsuModes,
 		ErrorFlash:      errorFlashes,
 		SuccessFlash:    successFlashes,
+		Frequencies:     [3]string{translations.PostFrequencyDaily, translations.PostFrequencyWeekly, translations.PostFrequencyMonthly},
+		Hours:           hours,
 	}
 
 	templates.ExecuteTemplate(w, "settings.html", pageData)
@@ -153,6 +164,30 @@ func translateSettingsPage(localizer *i18n.Localizer, isAuthenticated bool, user
 		MessageID: "SettingsPageNoDataWarning",
 	})
 
+	hourToPostLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsHourToPostLabel",
+	})
+
+	postFrequencyLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyLabel",
+	})
+
+	postFrequencyDaily := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyDaily",
+	})
+
+	postFrequencyWeekly := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyWeekly",
+	})
+
+	postFrequencyMonthly := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsPostFrequencyMonthly",
+	})
+
+	currentUTCTimeLabel := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "SettingsCurrentUTCTimeLabel",
+	})
+
 	return settingsPageTranslations{
 		Navbar:                     navbar,
 		SettingsHeader:             settingsHeaderText,
@@ -166,6 +201,12 @@ func translateSettingsPage(localizer *i18n.Localizer, isAuthenticated bool, user
 		GameModeText:               gameModeText,
 		UpdateSettingsButton:       updateSettings,
 		NoDataWarning:              noDataWarning,
+		HourToPostLabel:            hourToPostLabel,
+		PostFrequencyLabel:         postFrequencyLabel,
+		PostFrequencyDaily:         postFrequencyDaily,
+		PostFrequencyWeekly:        postFrequencyWeekly,
+		PostFrequencyMonthly:       postFrequencyMonthly,
+		CurrentUTCTimeLabel:        currentUTCTimeLabel,
 	}
 }
 
@@ -314,6 +355,7 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/settings", 302)
 		return
 	}
+	user.OsuSettings.Mode = modeNumber
 
 	// Get osu! player information
 	playerName := r.Form.Get("osu_username")
@@ -462,7 +504,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
 				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
 				user.OsuSettings.Player = dbOsuPlayer.GetId()
-				user.OsuSettings.Mode = modeNumber
 				err = connection.Collection("usermodels").Save(&user)
 				if err != nil {
 					captureError(err)
@@ -527,7 +568,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		user.OsuSettings.Player = dbOsuPlayer.GetId()
-		user.OsuSettings.Mode = modeNumber
 		err = connection.Collection("usermodels").Save(&user)
 		if err != nil {
 			captureError(err)
@@ -557,7 +597,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
 				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
 				user.OsuSettings.Player = dbOsuPlayer.GetId()
-				user.OsuSettings.Mode = modeNumber
 				err = connection.Collection("usermodels").Save(&user)
 				if err != nil {
 					captureError(err)
@@ -622,7 +661,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		user.OsuSettings.Player = dbOsuPlayer.GetId()
-		user.OsuSettings.Mode = modeNumber
 		err = connection.Collection("usermodels").Save(&user)
 		if err != nil {
 			captureError(err)
@@ -652,7 +690,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
 				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
 				user.OsuSettings.Player = dbOsuPlayer.GetId()
-				user.OsuSettings.Mode = modeNumber
 				err = connection.Collection("usermodels").Save(&user)
 				if err != nil {
 					captureError(err)
@@ -717,7 +754,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		user.OsuSettings.Player = dbOsuPlayer.GetId()
-		user.OsuSettings.Mode = modeNumber
 		err = connection.Collection("usermodels").Save(&user)
 		if err != nil {
 			captureError(err)
@@ -747,7 +783,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
 				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
 				user.OsuSettings.Player = dbOsuPlayer.GetId()
-				user.OsuSettings.Mode = modeNumber
 				err = connection.Collection("usermodels").Save(&user)
 				if err != nil {
 					captureError(err)
@@ -812,7 +847,6 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		user.OsuSettings.Player = dbOsuPlayer.GetId()
-		user.OsuSettings.Mode = modeNumber
 		err = connection.Collection("usermodels").Save(&user)
 		if err != nil {
 			captureError(err)

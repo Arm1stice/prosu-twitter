@@ -65,3 +65,27 @@ other = "Update Settings"
 [SettingsPageNoDataWarning]
 description = "Text that tells the user that they need to enter and save a username, or else tweets won't be posted to their account"
 other = "You must save an osu! username before tweets will begin to post"
+
+[SettingsHourToPostLabel]
+description = "Label telling users that the below field is for hour in which to post the tweet in UTC Time."
+other = "Hour to Post Tweet (UTC Time)"
+
+[SettingsPostFrequencyLabel]
+description = "Label telling users that the below field is for the frequency in which tweets are posted."
+other = "Post Frequency"
+
+[SettingsPostFrequencyDaily]
+description = "Option for users to select which indicates that the post frequency will be Daily"
+other = "Daily"
+
+[SettingsPostFrequencyWeekly]
+description = "Option for users to select which indicates that the post frequency will be Weekly"
+other = "Weekly"
+
+[SettingsPostFrequencyMonthly]
+description = "Option for users to select which indicates that the post frequency will be Monthly"
+other = "Monthly"
+
+[SettingsCurrentUTCTimeLabel]
+description = "Tells the user that the below paragraph displays the current UTC time, as reference"
+other = "Current UTC Time"
