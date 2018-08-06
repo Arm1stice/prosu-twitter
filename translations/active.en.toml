@@ -6,6 +6,14 @@ other = "Sign in with Twitter"
 description = "The text telling the user to sign out of their Twitter account"
 other = "Logout of @{{.Handle}}"
 
+[NavbarHomePage]
+description = "Text for home page button on navbar"
+other = "Home"
+
+[NavbarSettingsPage]
+description = "Text for settings page button on navbar"
+other = "Settings"
+
 [HomePageTotalUsers]
 description = "Displays the total number of users"
 other = " total users!"

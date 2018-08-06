@@ -5,8 +5,18 @@
     aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    <ul class="navbar-nav">
+  <div class="collapse navbar-collapse" id="navbarNav">
+    {{if .IsAuthenticated}}
+    <ul class="nav navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="/">{{.Translations.Navbar.HomePage}}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/settings">{{.Translations.Navbar.SettingsPage}}</a>
+        </li>
+    </ul>
+    {{end}}
+    <ul class="nav navbar-nav ml-auto">
       {{if .IsAuthenticated}}
       <li class="nav-item">
         <a class="nav-link" href="/logout">{{.Translations.Navbar.Logout}}</a>

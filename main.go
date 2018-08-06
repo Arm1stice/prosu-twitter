@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/gob"
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -117,6 +118,9 @@ func init() {
 	connection = conn
 
 	osuAPIKey := os.Getenv("OSU_API_KEY")
+	if len(osuAPIKey) == 0 {
+		panic(errors.New("OSU_API_KEY variable must not be empty"))
+	}
 	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
 }
 
@@ -231,13 +235,23 @@ func logoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 type navbarTranslations struct {
-	SignIn string
-	Logout string
+	SignIn       string
+	Logout       string
+	HomePage     string
+	SettingsPage string
 }
 
 func translateNavbar(localizer *i18n.Localizer, isAuthenticated bool, user User) navbarTranslations {
 	signIn := localizer.MustLocalize(&i18n.LocalizeConfig{
 		MessageID: "NavbarSignIn",
+	})
+
+	homePage := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "NavbarHomePage",
+	})
+
+	settingsPage := localizer.MustLocalize(&i18n.LocalizeConfig{
+		MessageID: "NavbarSettingsPage",
 	})
 
 	var username string
@@ -252,7 +266,9 @@ func translateNavbar(localizer *i18n.Localizer, isAuthenticated bool, user User)
 		},
 	})
 	return navbarTranslations{
-		SignIn: signIn,
-		Logout: logout,
+		SignIn:       signIn,
+		Logout:       logout,
+		HomePage:     homePage,
+		SettingsPage: settingsPage,
 	}
 }

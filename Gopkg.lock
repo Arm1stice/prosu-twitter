@@ -90,7 +90,7 @@
   name = "github.com/getsentry/raven-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "ba97302481f2659d9ae93288e422acb942093b26"
+  revision = "7535a8fa2ace0ffb684b19f28d00655459ea2dae"
 
 [[projects]]
   branch = "master"
@@ -174,7 +174,7 @@
   revision = "f4e24b6d100c9436cbfe5d439581653d455490e7"
 
 [[projects]]
-  digest = "1:52765d5ee126efce0453950b030bb709cf038afcebcb0ba104430ad296f81155"
+  digest = "1:2c34c77bf3ec848da26e48af58fc511ed52750961fa848399d122882b8890928"
   name = "github.com/nicksnyder/go-i18n"
   packages = [
     "v2/i18n",
@@ -182,8 +182,8 @@
     "v2/internal/plural",
   ]
   pruneopts = "UT"
-  revision = "8c6996ea1058153460146b16c341a4ae611f7cf7"
-  version = "v2.0.0-beta.3"
+  revision = "a16b91a3ba80db3a2301c70d1d302d42251c9079"
+  version = "v2.0.0-beta.5"
 
 [[projects]]
   digest = "1:1919e36a53e2297eca9d3516ca358dec92257fe0de3361351e09400c91d65d5e"
@@ -211,11 +211,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ceb729da7f8dd7fc10943ecafe9fc59d10c39437cbb3dabcf77267385cb21e8d"
+  digest = "1:f533ebe01a85cd89a0e97493334d251b4b44887f3df26a870fc2fd7d44585461"
   name = "github.com/wcalandro/osuapi-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "fdfac9256b631259e3190d5768e0846e8bed0c38"
+  revision = "b6f6dc94fb4f93f514957702a296853f758bb9fd"
 
 [[projects]]
   branch = "master"
@@ -223,7 +223,7 @@
   name = "golang.org/x/net"
   packages = ["context"]
   pruneopts = "UT"
-  revision = "cffdcf672aee934982473246bc7e9a8ba446aa9b"
+  revision = "f4c29de78a2a91c00474a2e689954305c350adf9"
 
 [[projects]]
   digest = "1:17ad89bd57485e11f306d41b703f53089fb0803682707b21fe9b3b29467d37a0"
