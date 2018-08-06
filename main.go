@@ -117,7 +117,7 @@ func init() {
 	connection = conn
 
 	osuAPIKey := os.Getenv("OSU_API_KEY")
-	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey))
+	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
 }
 
 func main() {

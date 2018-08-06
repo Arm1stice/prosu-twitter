@@ -8,23 +8,19 @@ import (
 )
 
 type osuRateLimiter struct {
-	API osuapi.API
+	API     osuapi.API
+	Limiter *rate.Limiter
 }
 
-var limit rate.Limit
-var rLimiter *rate.Limiter
-
-func init() {
-	limit = rate.Limit(250 / 60) // 250 API Calls every 60 seconds
-	rLimiter = rate.NewLimiter(limit, 10)
-}
-func newOsuLimiter(api osuapi.API) osuRateLimiter {
+func newOsuLimiter(api osuapi.API, callsPerMinute int) osuRateLimiter {
+	rLimiter := rate.NewLimiter(rate.Limit(callsPerMinute/60), 10)
 	return osuRateLimiter{
-		API: api,
+		API:     api,
+		Limiter: rLimiter,
 	}
 }
 
 func (limiter osuRateLimiter) GetUser(options osuapi.M) (*osuapi.User, error) {
-	rLimiter.Wait(context.Background())
+	limiter.Limiter.Wait(context.Background())
 	return limiter.API.GetUser(options)
 }
