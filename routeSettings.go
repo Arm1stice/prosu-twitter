@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-bongo/bongo"
@@ -434,39 +435,42 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 	// The player could be found in the database, now we have to check if they have a recent osu! API request saved to their user for their selected game mode. If so, we don't want to save more data.
 	log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " exists in the database, checking to see if we have recent data for mode " + strconv.Itoa(modeNumber))
 
+	// Check to see if the name has changed, if so, update it
+	if osuPlayer.Username != strings.ToLower(dbOsuPlayer.PlayerName) {
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + "'s name has changed. Updating")
+		dbOsuPlayer.PlayerName = osuPlayer.Username
+		err = connection.Collection("osuplayermodels").Save(dbOsuPlayer)
+		if err != nil {
+			captureError(err)
+			session.AddFlash("Error updating player name in database", "settings_error")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
+		}
+	}
+
 	if modeNumber == 0 {
 		// Standard
 
 		// First check if they have any requests for this game mode at all
 		if len(dbOsuPlayer.Modes.Standard.Checks) != 0 {
-			lastRequest := &OsuRequest{}
-			err = connection.Collection("osurequestmodels").FindById(dbOsuPlayer.Modes.Standard.Checks[len(dbOsuPlayer.Modes.Standard.Checks)-1], lastRequest)
+			log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has data for mode " + allOsuModes[modeNumber] + ". Saving settings and returning")
+			user.OsuSettings.Player = dbOsuPlayer.GetId()
+			err = connection.Collection("usermodels").Save(&user)
 			if err != nil {
 				captureError(err)
-				session.AddFlash("Error getting info about the last data entry for the requested player", "settings_error")
+				session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!standard", "settings_error")
 				session.Save(r, w)
 				http.Redirect(w, r, "/settings", 302)
 				return
 			}
-			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
-				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
-				user.OsuSettings.Player = dbOsuPlayer.GetId()
-				err = connection.Collection("usermodels").Save(&user)
-				if err != nil {
-					captureError(err)
-					session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!standard", "settings_error")
-					session.Save(r, w)
-					http.Redirect(w, r, "/settings", 302)
-					return
-				}
-				log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
-				session.AddFlash("Successfully updated settings", "settings_success")
-				session.Save(r, w)
-				http.Redirect(w, r, "/settings", 302)
-				return
-			}
+			log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+			session.AddFlash("Successfully updated settings", "settings_success")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
 		}
-		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " doesn't have recent data for mode " + strconv.Itoa(modeNumber) + ". Saving data, settings, and returning")
+		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " doesn't have data for mode " + allOsuModes[modeNumber] + ". Saving data, settings, and returning")
 		// They don't have any recent checks saved, we have to save one
 		osuRequest := &OsuRequest{
 			OsuPlayer:   dbOsuPlayer.GetId(),
@@ -532,32 +536,21 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 		// Taiko
 		// First check if they have any requests for this game mode at all
 		if len(dbOsuPlayer.Modes.Taiko.Checks) != 0 {
-			lastRequest := &OsuRequest{}
-			err = connection.Collection("osurequestmodels").FindById(dbOsuPlayer.Modes.Taiko.Checks[len(dbOsuPlayer.Modes.Taiko.Checks)-1], lastRequest)
+			log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has data for mode " + allOsuModes[modeNumber] + ". Saving settings and returning")
+			user.OsuSettings.Player = dbOsuPlayer.GetId()
+			err = connection.Collection("usermodels").Save(&user)
 			if err != nil {
 				captureError(err)
-				session.AddFlash("Error getting info about the last data entry for the requested player", "settings_error")
+				session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!taiko", "settings_error")
 				session.Save(r, w)
 				http.Redirect(w, r, "/settings", 302)
 				return
 			}
-			if time.Now().Unix()-lastRequest.DateChecked < 86400 {
-				log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " has recent data for mode " + strconv.Itoa(modeNumber) + ". Saving settings and returning")
-				user.OsuSettings.Player = dbOsuPlayer.GetId()
-				err = connection.Collection("usermodels").Save(&user)
-				if err != nil {
-					captureError(err)
-					session.AddFlash("Error saving user after updating player info and mode, while not grabbing new data for osu!taiko", "settings_error")
-					session.Save(r, w)
-					http.Redirect(w, r, "/settings", 302)
-					return
-				}
-				log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
-				session.AddFlash("Successfully updated settings", "settings_success")
-				session.Save(r, w)
-				http.Redirect(w, r, "/settings", 302)
-				return
-			}
+			log.Debug("User " + user.Twitter.Profile.Handle + "'s settings are now updated, returning")
+			session.AddFlash("Successfully updated settings", "settings_success")
+			session.Save(r, w)
+			http.Redirect(w, r, "/settings", 302)
+			return
 		}
 		log.Debug("User " + user.Twitter.Profile.Handle + "'s player " + dbOsuPlayer.PlayerName + " doesn't have recent data for mode " + strconv.Itoa(modeNumber) + ". Saving data, settings, and returning")
 		// They don't have any recent checks saved, we have to save one
