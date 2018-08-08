@@ -61,6 +61,7 @@ var bundle *i18n.Bundle
 
 // osu! api
 var api osuRateLimiter
+var postingAPI osuRateLimiter
 
 func init() {
 	/* First, setting up logging */
@@ -122,6 +123,7 @@ func init() {
 		panic(errors.New("OSU_API_KEY variable must not be empty"))
 	}
 	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
+	postingAPI = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
 }
 
 func main() {
