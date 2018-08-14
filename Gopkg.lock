@@ -134,6 +134,17 @@
   version = "v3.3.2"
 
 [[projects]]
+  branch = "master"
+  digest = "1:62c57507df491b657e9ae2645f30958d9964c8eeb380600469eedc951ebb3a0e"
+  name = "github.com/golang/freetype"
+  packages = [
+    "raster",
+    "truetype",
+  ]
+  pruneopts = "UT"
+  revision = "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -172,6 +183,14 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "f4e24b6d100c9436cbfe5d439581653d455490e7"
+
+[[projects]]
+  branch = "master"
+  digest = "1:34534b73e925d20cc72cf202f8b482fdcbe3a1b113e19375f31aadabd0f0f97d"
+  name = "github.com/nfnt/resize"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "83c6a9932646f83e3267f353373d47347b6036b2"
 
 [[projects]]
   digest = "1:2c34c77bf3ec848da26e48af58fc511ed52750961fa848399d122882b8890928"
@@ -219,6 +238,21 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:c793f09249d173143b3b42e0cd0ee21a85cd976dfacc486a025aeb208c1403a8"
+  name = "golang.org/x/image"
+  packages = [
+    "draw",
+    "font",
+    "font/basicfont",
+    "font/plan9font",
+    "math/f64",
+    "math/fixed",
+  ]
+  pruneopts = "UT"
+  revision = "c73c2afc3b812cdd6385de5a50616511c4a3d458"
+
+[[projects]]
+  branch = "master"
   digest = "1:76ee51c3f468493aff39dbacc401e8831fbb765104cbf613b89bef01cf4bad70"
   name = "golang.org/x/net"
   packages = ["context"]
@@ -254,6 +288,14 @@
   revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
   version = "v1.2"
 
+[[projects]]
+  digest = "1:1758e788ff491eac33104f164d720408fdd0c294c639c883350463c4435af316"
+  name = "gopkg.in/fogleman/gg.v1"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a9ff18eccd6d57b3c8576a71a91a04868f62078c"
+  version = "v1.1.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
@@ -270,12 +312,14 @@
     "github.com/gorilla/sessions",
     "github.com/joho/godotenv",
     "github.com/mrjones/oauth",
+    "github.com/nfnt/resize",
     "github.com/nicksnyder/go-i18n/v2/i18n",
     "github.com/op/go-logging",
     "github.com/wcalandro/osuapi-go",
     "golang.org/x/text/language",
     "golang.org/x/time/rate",
     "gopkg.in/boj/redistore.v1",
+    "gopkg.in/fogleman/gg.v1",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
