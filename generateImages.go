@@ -126,7 +126,9 @@ func findAndGenerate() {
 	gLog("Finished filtering users. We now only have " + strconv.Itoa(len(list)) + " users to post tweets for")
 
 	// Time to generate
-	// TODO: LOOP THROUGH EACH USER AND `go updateAndPost(userID)`
+	for _, uID := range list {
+		go updateAndPost(uID)
+	}
 }
 
 func updateAndPost(userID bson.ObjectId) {
@@ -219,6 +221,7 @@ func updateAndPost(userID bson.ObjectId) {
 		}
 		l.Log("Saved the updated player document. Now we can generate the image.")
 		postImage, err := generateImage(prosuUser, dbOsuPlayer, checks, l)
+		// TODO: Post image to Twitter
 	} else {
 		l.Log("Last check was made less than 3 hours ago, we don't need new data")
 	}
