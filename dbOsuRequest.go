@@ -21,8 +21,8 @@ type OsuRequestData struct {
 	Scores     requestDataScores `json:"scores" bson:"scores"`
 	PP         requestDataPP     `json:"pp" bson:"pp"`
 	Country    string            `json:"country" bson:"country"`
-	Level      float64           `json:"level" bson:"level"`
-	Accuracy   float64           `json:"accuracy" bson:"accuracy"`
+	Level      float32           `json:"level" bson:"level"`
+	Accuracy   float32           `json:"accuracy" bson:"accuracy"`
 }
 
 type requestDataCounts struct {
@@ -43,7 +43,7 @@ type requestDataScores struct {
 }
 
 type requestDataPP struct {
-	Raw         float64 `json:"raw" bson:"raw"`
+	Raw         float32 `json:"raw" bson:"raw"`
 	Rank        int     `json:"rank" bson:"rank"`
 	CountryRank int     `json:"countryRank" bson:"countryRank"`
 }
