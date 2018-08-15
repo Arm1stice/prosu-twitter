@@ -30,7 +30,7 @@ type requestDataCounts struct {
 	Count100s int `json:"100" bson:"100"`
 	Count300s int `json:"300" bson:"300"`
 	SS        int `json:"SS" bson:"SS"`
-	SSH       int `json:"SSH" bson:"SSH`
+	SSH       int `json:"SSH" bson:"SSH"`
 	S         int `json:"S" bson:"S"`
 	SH        int `json:"SH" bson:"SH"`
 	A         int `json:"A" bson:"A"`
