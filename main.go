@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/robfig/cron"
 	"github.com/wcalandro/osuapi-go"
 
 	"github.com/BurntSushi/toml"
@@ -62,6 +63,9 @@ var bundle *i18n.Bundle
 // osu! api
 var api osuRateLimiter
 var postingAPI osuRateLimiter
+
+// Cron
+var c *cron.Cron
 
 func init() {
 	/* First, setting up logging */
@@ -124,6 +128,9 @@ func init() {
 	}
 	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
 	postingAPI = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
+
+	c = cron.New()
+	c.AddFunc("0 * * * *", findAndGenerate)
 }
 
 func main() {

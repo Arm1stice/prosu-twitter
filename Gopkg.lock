@@ -67,6 +67,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:4f1bf78ec2d99a8cb0250987262cbfac2ee1b011a702d2bdaad9a2037cfa50f7"
+  name = "github.com/flopp/go-findfont"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e788239e52bccbae8c957dbc5c4daeb4fcb9c38b"
+
+[[projects]]
+  branch = "master"
   digest = "1:b5cfd8d62c46082a75974f2f5e167c272f7f7d47c7a21caf49b17a45a558a601"
   name = "github.com/garyburd/go-oauth"
   packages = ["oauth"]
@@ -229,6 +237,14 @@
   version = "v0.8.0"
 
 [[projects]]
+  digest = "1:ed615c5430ecabbb0fb7629a182da65ecee6523900ac1ac932520860878ffcad"
+  name = "github.com/robfig/cron"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b41be1df696709bb6395fe435af20370037c0b4c"
+  version = "v1.1"
+
+[[projects]]
   branch = "master"
   digest = "1:f533ebe01a85cd89a0e97493334d251b4b44887f3df26a870fc2fd7d44585461"
   name = "github.com/wcalandro/osuapi-go"
@@ -303,11 +319,13 @@
     "github.com/BurntSushi/toml",
     "github.com/ChimeraCoder/anaconda",
     "github.com/dustin/go-humanize",
+    "github.com/flopp/go-findfont",
     "github.com/getsentry/raven-go",
     "github.com/globalsign/mgo/bson",
     "github.com/go-bongo/bongo",
     "github.com/go-chi/chi",
     "github.com/go-chi/chi/middleware",
+    "github.com/golang/freetype/truetype",
     "github.com/gorilla/context",
     "github.com/gorilla/sessions",
     "github.com/joho/godotenv",
@@ -315,7 +333,9 @@
     "github.com/nfnt/resize",
     "github.com/nicksnyder/go-i18n/v2/i18n",
     "github.com/op/go-logging",
+    "github.com/robfig/cron",
     "github.com/wcalandro/osuapi-go",
+    "golang.org/x/image/font",
     "golang.org/x/text/language",
     "golang.org/x/time/rate",
     "gopkg.in/boj/redistore.v1",
