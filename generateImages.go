@@ -67,7 +67,10 @@ func init() {
 	// Bold font for player name
 	fontPath, err = findfont.Find("arial bold.ttf")
 	if err != nil {
-		fontPath = "/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf"
+		fontPath, err = findfont.Find("arial_bold.ttf")
+		if err != nil {
+			panic(err)
+		}
 		err = nil
 	}
 	fontData, err = ioutil.ReadFile(fontPath)
