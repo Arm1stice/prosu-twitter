@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dokku": {
-      "predeploy": "sudo apt update && sudo apt install ttf-mscorefonts-installer && sudo fc-cache"
+      "predeploy": "apt update && apt install ttf-mscorefonts-installer && fc-cache"
     }
   }
 }
