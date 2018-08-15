@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dokku": {
-      "predeploy": "export DEBIAN_FRONTEND=noninteractive && echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | debconf-set-selections && apt-get update && apt-get install software-properties-common && add-apt-repository multiverse && apt-get update && apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && fc-cache"
+      "predeploy": "export DEBIAN_FRONTEND=noninteractive && echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | debconf-set-selections && apt-get update && apt-get install -y --no-install-recommends software-properties-common && add-apt-repository multiverse && apt-get update && apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && fc-cache"
     }
   }
 }
