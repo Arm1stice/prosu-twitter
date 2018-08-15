@@ -67,6 +67,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:4f1bf78ec2d99a8cb0250987262cbfac2ee1b011a702d2bdaad9a2037cfa50f7"
+  name = "github.com/flopp/go-findfont"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e788239e52bccbae8c957dbc5c4daeb4fcb9c38b"
+
+[[projects]]
+  branch = "master"
   digest = "1:b5cfd8d62c46082a75974f2f5e167c272f7f7d47c7a21caf49b17a45a558a601"
   name = "github.com/garyburd/go-oauth"
   packages = ["oauth"]
@@ -134,6 +142,17 @@
   version = "v3.3.2"
 
 [[projects]]
+  branch = "master"
+  digest = "1:62c57507df491b657e9ae2645f30958d9964c8eeb380600469eedc951ebb3a0e"
+  name = "github.com/golang/freetype"
+  packages = [
+    "raster",
+    "truetype",
+  ]
+  pruneopts = "UT"
+  revision = "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -174,6 +193,14 @@
   revision = "f4e24b6d100c9436cbfe5d439581653d455490e7"
 
 [[projects]]
+  branch = "master"
+  digest = "1:34534b73e925d20cc72cf202f8b482fdcbe3a1b113e19375f31aadabd0f0f97d"
+  name = "github.com/nfnt/resize"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "83c6a9932646f83e3267f353373d47347b6036b2"
+
+[[projects]]
   digest = "1:2c34c77bf3ec848da26e48af58fc511ed52750961fa848399d122882b8890928"
   name = "github.com/nicksnyder/go-i18n"
   packages = [
@@ -210,12 +237,35 @@
   version = "v0.8.0"
 
 [[projects]]
+  digest = "1:ed615c5430ecabbb0fb7629a182da65ecee6523900ac1ac932520860878ffcad"
+  name = "github.com/robfig/cron"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b41be1df696709bb6395fe435af20370037c0b4c"
+  version = "v1.1"
+
+[[projects]]
   branch = "master"
   digest = "1:f533ebe01a85cd89a0e97493334d251b4b44887f3df26a870fc2fd7d44585461"
   name = "github.com/wcalandro/osuapi-go"
   packages = ["."]
   pruneopts = "UT"
   revision = "b6f6dc94fb4f93f514957702a296853f758bb9fd"
+
+[[projects]]
+  branch = "master"
+  digest = "1:c793f09249d173143b3b42e0cd0ee21a85cd976dfacc486a025aeb208c1403a8"
+  name = "golang.org/x/image"
+  packages = [
+    "draw",
+    "font",
+    "font/basicfont",
+    "font/plan9font",
+    "math/f64",
+    "math/fixed",
+  ]
+  pruneopts = "UT"
+  revision = "c73c2afc3b812cdd6385de5a50616511c4a3d458"
 
 [[projects]]
   branch = "master"
@@ -254,6 +304,14 @@
   revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
   version = "v1.2"
 
+[[projects]]
+  digest = "1:1758e788ff491eac33104f164d720408fdd0c294c639c883350463c4435af316"
+  name = "gopkg.in/fogleman/gg.v1"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a9ff18eccd6d57b3c8576a71a91a04868f62078c"
+  version = "v1.1.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
@@ -261,21 +319,27 @@
     "github.com/BurntSushi/toml",
     "github.com/ChimeraCoder/anaconda",
     "github.com/dustin/go-humanize",
+    "github.com/flopp/go-findfont",
     "github.com/getsentry/raven-go",
     "github.com/globalsign/mgo/bson",
     "github.com/go-bongo/bongo",
     "github.com/go-chi/chi",
     "github.com/go-chi/chi/middleware",
+    "github.com/golang/freetype/truetype",
     "github.com/gorilla/context",
     "github.com/gorilla/sessions",
     "github.com/joho/godotenv",
     "github.com/mrjones/oauth",
+    "github.com/nfnt/resize",
     "github.com/nicksnyder/go-i18n/v2/i18n",
     "github.com/op/go-logging",
+    "github.com/robfig/cron",
     "github.com/wcalandro/osuapi-go",
+    "golang.org/x/image/font",
     "golang.org/x/text/language",
     "golang.org/x/time/rate",
     "gopkg.in/boj/redistore.v1",
+    "gopkg.in/fogleman/gg.v1",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

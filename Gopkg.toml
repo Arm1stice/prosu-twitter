@@ -77,3 +77,14 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/time"
+[[constraint]]
+  name = "gopkg.in/fogleman/gg.v1"
+  version = "1.1.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/nfnt/resize"
+
+[[constraint]]
+  name = "github.com/robfig/cron"
+  version = "1.1.0"

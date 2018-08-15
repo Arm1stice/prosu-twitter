@@ -28,7 +28,7 @@ type OsuSettings struct {
 
 // UserTweet - A tweet object
 type UserTweet struct {
-	DatePosted  int         `bson:"datePosted"`
+	DatePosted  int64       `bson:"datePosted"`
 	TweetObject TweetObject `bson:"tweetObject"`
 }
 
