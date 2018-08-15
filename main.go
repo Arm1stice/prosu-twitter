@@ -64,9 +64,6 @@ var bundle *i18n.Bundle
 var api osuRateLimiter
 var postingAPI osuRateLimiter
 
-// Cron
-var c *cron.Cron
-
 func init() {
 	/* First, setting up logging */
 	loggingBackend := logging.NewLogBackend(os.Stdout, "", 0)
@@ -128,9 +125,6 @@ func init() {
 	}
 	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
 	postingAPI = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
-
-	c = cron.New()
-	c.AddFunc("0 * * * *", findAndGenerate)
 }
 
 func main() {
@@ -176,6 +170,14 @@ func main() {
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 
 	bundle.MustLoadMessageFile("./translations/active.en.toml")
+
+	// Cron job
+	c := cron.New()
+	c.AddFunc("0 0 * * * *", func() {
+		log.Info("Running posting function")
+		findAndGenerate()
+	})
+	c.Start()
 
 	/* Listen */
 	port := "5000"
