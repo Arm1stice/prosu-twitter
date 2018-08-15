@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dokku": {
-      "predeploy": "apt update && apt install ttf-mscorefonts-installer && fc-cache"
+      "predeploy": "export DEBIAN_FRONTEND=noninteractive && echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | debconf-set-selections && apt update && apt-get install -y --no-install-recommends fontconfig ttf-mscorefonts-installer && fc-cache"
     }
   }
 }
