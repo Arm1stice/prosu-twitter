@@ -140,17 +140,17 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 	r.Use(getLoggedInValue)
 
-	r.Get("/", homePage)
+	r.Get(relicHandle("/", homePage))
 
-	r.Get("/connect/twitter", redirectToTwitter)
-	r.Get("/connect/twitter/callback", obtainAccessToken)
+	r.Get(relicHandle("/connect/twitter", redirectToTwitter))
+	r.Get(relicHandle("/connect/twitter/callback", obtainAccessToken))
 
-	r.Get("/logout", logoutUser)
+	r.Get(relicHandle("/logout", logoutUser))
 
-	r.Get("/settings", routeSettings)
-	r.Post("/settings/enable", enableTweetPosting)
-	r.Post("/settings/disable", disableTweetPosting)
-	r.Post("/settings/update", updateSettings)
+	r.Get(relicHandle("/settings", routeSettings))
+	r.Post(relicHandle("/settings/enable", enableTweetPosting))
+	r.Post(relicHandle("/settings/disable", disableTweetPosting))
+	r.Post(relicHandle("/settings/update", updateSettings))
 	//FileServer(r, "/assets", http.Dir("./static"))
 
 	r.Get("/favicon.ico", ServeFavicon)

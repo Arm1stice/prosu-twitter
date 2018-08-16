@@ -88,3 +88,7 @@
 [[constraint]]
   name = "github.com/robfig/cron"
   version = "1.1.0"
+
+[[constraint]]
+  name = "github.com/newrelic/go-agent"
+  version = "2.0.0"
