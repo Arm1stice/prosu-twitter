@@ -16,7 +16,6 @@ func init() {
 		if os.Getenv("NEWRELIC_KEY") == "" {
 			if os.Getenv("NEWRELIC_DISABLED") != "true" {
 				panic("NEWRELIC_KEY must be set if deploying in production or NEWRELIC_DISABLED must be set to 'true'")
-				return
 			} else {
 				log.Debug("NEWRELIC_KEY isn't set but NEWRELIC_DISABLED is set to true, ignoring NewRelic setup")
 			}
