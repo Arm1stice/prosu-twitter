@@ -135,6 +135,7 @@ func init() {
 	// Check if maintenance mode
 	if os.Getenv("MAINTENANCE") == "true" {
 		isMaintenance = true
+		log.Debug("Starting in maintenance mode")
 	}
 }
 
