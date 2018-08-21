@@ -64,6 +64,12 @@ var bundle *i18n.Bundle
 var api osuRateLimiter
 var postingAPI osuRateLimiter
 
+// Is maintenance
+var isMaintenance = false
+
+type blankData struct {
+}
+
 func init() {
 	/* First, setting up logging */
 	loggingBackend := logging.NewLogBackend(os.Stdout, "", 0)
@@ -125,6 +131,12 @@ func init() {
 	}
 	api = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
 	postingAPI = newOsuLimiter(osuapi.NewAPI(osuAPIKey), 250)
+
+	// Check if maintenance mode
+	if os.Getenv("MAINTENANCE") == "true" {
+		isMaintenance = true
+		log.Debug("Starting in maintenance mode")
+	}
 }
 
 func main() {
@@ -138,6 +150,15 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
+
+	if isMaintenance {
+		r.Use(func(next http.Handler) http.Handler {
+
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				templates.ExecuteTemplate(w, "503.html", blankData{})
+			})
+		})
+	}
 	r.Use(getLoggedInValue)
 
 	r.Get(relicHandle("/", homePage))
