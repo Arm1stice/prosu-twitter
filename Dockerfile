@@ -11,3 +11,4 @@ RUN dep ensure -vendor-only
 RUN go build
 
 ENTRYPOINT [ "./prosu-go" ]
+EXPOSE 5000
