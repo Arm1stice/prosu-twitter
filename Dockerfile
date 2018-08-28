@@ -1,5 +1,7 @@
 FROM arm1stice/prosu-twitter
 
+RUN export GOPATH=/go/
+
 RUN go get github.com/golang/dep/cmd/dep
 
 WORKDIR /go/src/github.com/wcalandro/prosu-go
