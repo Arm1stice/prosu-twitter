@@ -30,9 +30,9 @@
   unused-packages = true
 
 [metadata.heroku]
-  root-package = "github.com/wcalandro/prosu-go"
+  root-package = "github.com/wcalandro/prosu-twitter"
   go-version = "go1.10.3"
-  pkg-spec = "github.com/wcalandro/prosu-go"
+  pkg-spec = "github.com/wcalandro/prosu-twitter"
 
 [[constraint]]
   name = "github.com/joho/godotenv"

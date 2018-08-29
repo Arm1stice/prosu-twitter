@@ -1,1 +1,1 @@
-web: prosu-go
+web: prosu-twitter
