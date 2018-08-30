@@ -1,8 +1,6 @@
-FROM arm1stice/prosu-twitter
+FROM arm1stice/prosu-twitter:alpine
 
 RUN export GOPATH=/go/
-
-RUN go get github.com/golang/dep/cmd/dep
 
 WORKDIR /go/src/github.com/wcalandro/prosu-twitter
 COPY . /go/src/github.com/wcalandro/prosu-twitter
