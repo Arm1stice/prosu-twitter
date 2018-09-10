@@ -188,8 +188,12 @@ func updateAndPost(userID bson.ObjectId) {
 	}
 
 	l.Log("Determining if the last check was done within the last 6 hours")
-	if time.Now().Unix()-lastCheck.DateChecked > 10800 {
-		l.Log("Last check was made more than 3 hours ago, fetching new data")
+	if time.Now().Unix()-lastCheck.DateChecked > 10800 || len(checks) == 1 {
+		if time.Now().Unix()-lastCheck.DateChecked > 10800 {
+			l.Log("Last check was made more than 3 hours ago, fetching new data")
+		} else {
+			l.Log("We only have one set of data, grabbing data again.")
+		}
 		data, err := postingAPI.GetUser(osuapi.M{"u": dbOsuPlayer.UserID, "m": strconv.Itoa(prosuUser.OsuSettings.Mode)})
 		if err != nil {
 			l.Error("Failed to grab new data")
