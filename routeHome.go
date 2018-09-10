@@ -41,13 +41,14 @@ func init() {
 
 func updateCurrentUsers() {
 	rSet := connection.Collection("usermodels").Find(bson.M{})
-	count, err := CountResults(rSet)
-	if err != nil {
-		log.Error("Error updating current users")
-		log.Error(err.Error())
-		return
+	user := &User{}
+
+	totalUsers := 0
+	for rSet.Next(user) {
+		totalUsers++
 	}
-	currentUsers = humanize.Comma(int64(count))
+
+	currentUsers = humanize.Comma(int64(totalUsers))
 }
 
 func updateTotalTweets() {

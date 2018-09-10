@@ -9,9 +9,9 @@ func CountResults(r *bongo.ResultSet) (int, error) {
 
 	// Get count on a different session to avoid blocking
 	sess := r.Collection.Connection.Session.Copy()
-
+	defer sess.Close()
+	
 	count, err := sess.DB(r.Collection.Database).C(r.Collection.Name).Find(r.Params).Count()
-	sess.Close()
 
 	if err != nil {
 		return 0, err
