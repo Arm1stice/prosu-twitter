@@ -163,6 +163,8 @@ func main() {
 
 	r.Get(relicHandle("/", homePage))
 
+	r.Get(relicHandle("/privacy", routePrivacy))
+
 	r.Get(relicHandle("/connect/twitter", redirectToTwitter))
 	r.Get(relicHandle("/connect/twitter/callback", obtainAccessToken))
 
