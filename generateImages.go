@@ -114,19 +114,38 @@ func findAndGenerate() {
 		if len(user.TweetHistory) != 0 {
 			lastTweet := user.TweetHistory[len(user.TweetHistory)-1]
 			// If they post daily, check if they have had a tweet posted within the last 24 hours
-			if user.OsuSettings.PostFrequency == 0 && time.Now().Unix()-lastTweet.DatePosted < 86400 {
-				gDebug(handle + " has had a tweet posted within the last 24 hours when their account is set to post daily. Skipping...")
-				continue
-			}
-			// If they post weekly, check if they have had a tweet posted within the last 7 days
-			if user.OsuSettings.PostFrequency == 1 && time.Now().Unix()-lastTweet.DatePosted < 604800 {
-				gDebug(handle + " has had a tweet posted within the last 7 days when their account is set to post weekly. Skipping...")
-				continue
-			}
-			// If they post monthly, check if they have had a tweet posted within the last 28 days
-			if user.OsuSettings.PostFrequency == 2 && time.Now().Unix()-lastTweet.DatePosted < 2419200 {
-				gDebug(handle + " has had a tweet posted within the last 28 days when their account is set to post monthly. Skipping...")
-				continue
+
+			// The old timestamps used MS since last tweet, so we need to check for a bigger gap
+			if lastTweet.DatePosted > 1500000000000 {
+				if user.OsuSettings.PostFrequency == 0 && time.Now().Unix()-lastTweet.DatePosted < 86400*1000 {
+					gDebug(handle + " has had a tweet posted within the last 24 hours when their account is set to post daily. Skipping...")
+					continue
+				}
+				// If they post weekly, check if they have had a tweet posted within the last 7 days
+				if user.OsuSettings.PostFrequency == 1 && time.Now().Unix()-lastTweet.DatePosted < 604800*1000 {
+					gDebug(handle + " has had a tweet posted within the last 7 days when their account is set to post weekly. Skipping...")
+					continue
+				}
+				// If they post monthly, check if they have had a tweet posted within the last 28 days
+				if user.OsuSettings.PostFrequency == 2 && time.Now().Unix()-lastTweet.DatePosted < 2419200*1000 {
+					gDebug(handle + " has had a tweet posted within the last 28 days when their account is set to post monthly. Skipping...")
+					continue
+				}
+			} else {
+				if user.OsuSettings.PostFrequency == 0 && time.Now().Unix()-lastTweet.DatePosted < 86400 {
+					gDebug(handle + " has had a tweet posted within the last 24 hours when their account is set to post daily. Skipping...")
+					continue
+				}
+				// If they post weekly, check if they have had a tweet posted within the last 7 days
+				if user.OsuSettings.PostFrequency == 1 && time.Now().Unix()-lastTweet.DatePosted < 604800 {
+					gDebug(handle + " has had a tweet posted within the last 7 days when their account is set to post weekly. Skipping...")
+					continue
+				}
+				// If they post monthly, check if they have had a tweet posted within the last 28 days
+				if user.OsuSettings.PostFrequency == 2 && time.Now().Unix()-lastTweet.DatePosted < 2419200 {
+					gDebug(handle + " has had a tweet posted within the last 28 days when their account is set to post monthly. Skipping...")
+					continue
+				}
 			}
 		}
 		list = append(list, user.GetId())
