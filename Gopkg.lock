@@ -262,11 +262,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:13b01728ee53b0395454eccb4b6ab1363c208d06d33e42e69c24b5b5e092f203"
+  digest = "1:13b91a8e3f72fa9d59b7cf825de0a9d95ffdb066492d368589e878d53c306da4"
   name = "github.com/wcalandro/osuapi-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "9f31622c36c55e52edb515ac9aa9c3d40c97d3a0"
+  revision = "77e922be89f60f1808f021731418d820ce1e725e"
 
 [[projects]]
   branch = "master"
