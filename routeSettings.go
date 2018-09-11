@@ -310,11 +310,11 @@ func updateSettings(w http.ResponseWriter, r *http.Request) {
 	osuPlayer, err := api.GetUser(osuapi.M{"u": playerName, "m": strconv.Itoa(modeNumber)})
 
 	if err != nil || osuPlayer == nil {
-		if osuPlayer == nil {
-			session.AddFlash("Couldn't find a user with the specified name and game mode", "settings_error")
-		} else {
+		if err != nil {
 			captureError(err)
 			session.AddFlash("Error getting user information", "settings_error")
+		} else {
+			session.AddFlash("Couldn't find a user with the specified name and game mode", "settings_error")
 		}
 		session.Save(r, w)
 		http.Redirect(w, r, "/settings", 302)
