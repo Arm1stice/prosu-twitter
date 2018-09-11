@@ -200,6 +200,10 @@ func updateAndPost(userID bson.ObjectId) {
 			captureError(err)
 			return
 		}
+		if data == nil {
+			l.Error("No data was returned for user " + dbOsuPlayer.UserID)
+			return
+		}
 		request := createRequest(dbOsuPlayer.GetId(), data)
 
 		// Save the request
