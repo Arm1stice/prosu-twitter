@@ -94,15 +94,15 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:608d0fe1621755354728fbaeef8ada8b4a33001aec88b66c970e641be950d850"
+  digest = "1:64ef2c2f0f508690f06c1b009e1e3103441ce60c2db0323ff94d8d1c560ec10b"
   name = "github.com/getsentry/raven-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "7535a8fa2ace0ffb684b19f28d00655459ea2dae"
+  revision = "084a9de9eb0361fbd5ded14b55c84e5493a5d7f6"
 
 [[projects]]
   branch = "master"
-  digest = "1:4b08116de0de75c041bb341686f0b139930f26cb84dfdf7641d435548114181d"
+  digest = "1:e0361634f0b5e1fd3227eaec90a86bc8595cb2526e71e41bcd72b6e474e198ca"
   name = "github.com/globalsign/mgo"
   packages = [
     ".",
@@ -112,7 +112,7 @@
     "internal/scram",
   ]
   pruneopts = "UT"
-  revision = "113d3961e7311526535a1ef7042196563d442761"
+  revision = "1ca0a4f7cbcbe61c005d1bd43fdd8bb8b71df6bc"
 
 [[projects]]
   branch = "master"
@@ -131,15 +131,15 @@
   revision = "ae070a2d2a38fd7233e255ded21fb26fe36b4796"
 
 [[projects]]
-  digest = "1:4eda9f7bf70f5145b3b9ed3f18ac93e9b1a0e38906eb69e526380c34861e2b07"
+  digest = "1:a9fe0f8ff72c388d0128e88ce5f3c27d37dcd0950acd7cdb8323555f12463396"
   name = "github.com/go-chi/chi"
   packages = [
     ".",
     "middleware",
   ]
   pruneopts = "UT"
-  revision = "e83ac2304db3c50cf03d96a2fcd39009d458bc35"
-  version = "v3.3.2"
+  revision = "b5294d10673813fac8558e7f47242bc9e61b4c25"
+  version = "v3.3.3"
 
 [[projects]]
   branch = "master"
@@ -169,12 +169,12 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:0fe783ea0c04c7d13f7c55d8f74b01b17e18a8320e7deecf578b41ef99b27205"
+  digest = "1:0aa142ca3543fa3aca344c2fa2d52e01d706a3ce4e1fa893e0ef29b5349ddf7a"
   name = "github.com/gorilla/sessions"
   packages = ["."]
   pruneopts = "UT"
-  revision = "03b6f63cc43ef9c7240a635a5e22b13180e822b8"
-  version = "v1.1.1"
+  revision = "81547393f870a35be888759a606ba7bf71dbe5c7"
+  version = "v1.1.2"
 
 [[projects]]
   digest = "1:70e697d67ccaec45e16bac3a32380ebcd9e7e071079c60d0171d42cf1cf9748a"
@@ -193,7 +193,7 @@
   revision = "f4e24b6d100c9436cbfe5d439581653d455490e7"
 
 [[projects]]
-  digest = "1:9ff30cba87a0683557c6da48b65b5fc141f6bb4f7ccb00739230b1508f87e6a1"
+  digest = "1:01f60ec456e70c9be269902c08fa189a9d47056a419c4a91a02f19df5e36ab59"
   name = "github.com/newrelic/go-agent"
   packages = [
     ".",
@@ -205,8 +205,8 @@
     "internal/utilization",
   ]
   pruneopts = "UT"
-  revision = "a5d75f2b4787aa1bbc76688187b2353f8ff581a6"
-  version = "v2.0.0"
+  revision = "46d73e6be8b4faeee70850d0df829e4fe00d6819"
+  version = "v2.1.0"
 
 [[projects]]
   branch = "master"
@@ -262,11 +262,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f533ebe01a85cd89a0e97493334d251b4b44887f3df26a870fc2fd7d44585461"
+  digest = "1:13b01728ee53b0395454eccb4b6ab1363c208d06d33e42e69c24b5b5e092f203"
   name = "github.com/wcalandro/osuapi-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "b6f6dc94fb4f93f514957702a296853f758bb9fd"
+  revision = "9f31622c36c55e52edb515ac9aa9c3d40c97d3a0"
 
 [[projects]]
   branch = "master"
@@ -289,7 +289,7 @@
   name = "golang.org/x/net"
   packages = ["context"]
   pruneopts = "UT"
-  revision = "c39426892332e1bb5ec0a434a079bf82f5d30c54"
+  revision = "161cd47e91fd58ac17490ef4d742dc98bb4cf60e"
 
 [[projects]]
   digest = "1:17ad89bd57485e11f306d41b703f53089fb0803682707b21fe9b3b29467d37a0"
