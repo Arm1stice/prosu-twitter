@@ -286,7 +286,7 @@ func updateAndPost(userID bson.ObjectId) {
 		captureError(err)
 		return
 	}
-	l.Log("Tweet successfully posted: https://twitter.com/" + prosuUser.Twitter.Profile.Handle + "/" + tweet.IdStr)
+	l.Log("Tweet successfully posted: https://twitter.com/" + prosuUser.Twitter.Profile.Handle + "/status/" + tweet.IdStr)
 	l.Log("Adding to database")
 
 	dbTweet := UserTweet{
