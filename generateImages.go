@@ -162,7 +162,7 @@ func findAndGenerate() {
 func updateAndPost(userID bson.ObjectId) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Critical("Recovering from failed updateAndPost")
+			log.Critical("Recovering from failed generateImage for user " + userID.Hex())
 			var err error
 			switch x := r.(type) {
 			case error:
@@ -408,7 +408,7 @@ func getAvatar(userID string) (image.Image, error) {
 func generateImage(user *User, player *OsuPlayer, checks []bson.ObjectId, l pLogger) (finalImage image.Image, funcErr error) {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Critical("Recovering from failed updateAndPost")
+			log.Critical("Recovering from failed generateImage for " + user.Twitter.Profile.Handle)
 			var err error
 			switch x := r.(type) {
 			case error:
