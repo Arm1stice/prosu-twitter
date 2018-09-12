@@ -117,17 +117,17 @@ func findAndGenerate() {
 
 			// The old timestamps used MS since last tweet, so we need to check for a bigger gap
 			if lastTweet.DatePosted > 1500000000000 {
-				if user.OsuSettings.PostFrequency == 0 && time.Now().Unix()-lastTweet.DatePosted < 86400*1000 {
+				if user.OsuSettings.PostFrequency == 0 && (time.Now().Unix()*1000)-lastTweet.DatePosted < 86400*1000 {
 					gDebug(handle + " has had a tweet posted within the last 24 hours when their account is set to post daily. Skipping...")
 					continue
 				}
 				// If they post weekly, check if they have had a tweet posted within the last 7 days
-				if user.OsuSettings.PostFrequency == 1 && time.Now().Unix()-lastTweet.DatePosted < 604800*1000 {
+				if user.OsuSettings.PostFrequency == 1 && (time.Now().Unix()*1000)-lastTweet.DatePosted < 604800*1000 {
 					gDebug(handle + " has had a tweet posted within the last 7 days when their account is set to post weekly. Skipping...")
 					continue
 				}
 				// If they post monthly, check if they have had a tweet posted within the last 28 days
-				if user.OsuSettings.PostFrequency == 2 && time.Now().Unix()-lastTweet.DatePosted < 2419200*1000 {
+				if user.OsuSettings.PostFrequency == 2 && (time.Now().Unix()*1000)-lastTweet.DatePosted < 2419200*1000 {
 					gDebug(handle + " has had a tweet posted within the last 28 days when their account is set to post monthly. Skipping...")
 					continue
 				}
