@@ -718,7 +718,11 @@ func formatDecimal(x float64) string {
 		decimalString = "." + strconv.Itoa(int(decimal))
 	}
 
-	return humanize.Comma(int64(rounded)) + decimalString
+	str := humanize.Comma(int64(rounded)) + decimalString
+	if len(str) > 30 {
+		return str[0:30]
+	}
+	return str
 }
 
 // Draws the specified color arrow
