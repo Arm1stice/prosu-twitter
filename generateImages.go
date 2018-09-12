@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/base64"
+	"errors"
 	"image"
 	"image/color"
 	"image/png"
@@ -159,6 +160,23 @@ func findAndGenerate() {
 }
 
 func updateAndPost(userID bson.ObjectId) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Critical("Recovering from failed updateAndPost")
+			var err error
+			switch x := r.(type) {
+			case error:
+				err = x
+			case string:
+				err = errors.New(x)
+			default:
+				err = errors.New("Unknown error")
+			}
+
+			log.Critical(err.Error())
+			captureError(err)
+		}
+	}()
 	l := pLogger{
 		UserID: userID.Hex(),
 	}
@@ -387,7 +405,24 @@ func getAvatar(userID string) (image.Image, error) {
 	return img, nil
 }
 
-func generateImage(user *User, player *OsuPlayer, checks []bson.ObjectId, l pLogger) (image.Image, error) {
+func generateImage(user *User, player *OsuPlayer, checks []bson.ObjectId, l pLogger) (finalImage image.Image, funcErr error) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Critical("Recovering from failed updateAndPost")
+			var err error
+			switch x := r.(type) {
+			case error:
+				err = x
+			case string:
+				err = errors.New(x)
+			default:
+				err = errors.New("Unknown error")
+			}
+
+			funcErr = err
+			finalImage = nil
+		}
+	}()
 	previousRequest := &OsuRequest{}
 	newRequest := &OsuRequest{}
 	l.Log("Grabbing previous requests")
