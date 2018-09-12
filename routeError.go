@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/getsentry/raven-go"
+	rollbar "github.com/rollbar/rollbar-go"
 )
 
 type errorPageData struct {
@@ -18,8 +18,10 @@ var environment string
 func init() {
 	environment = os.Getenv("ENVIRONMENT")
 	if environment == "production" {
-		ravenKey := os.Getenv("RAVEN_URL")
-		raven.SetDSN(ravenKey)
+		rollbar.SetToken(os.Getenv("ROLLBAR_TOKEN"))
+		rollbar.SetEnvironment("production")
+		rollbar.SetCodeVersion(os.Getenv("GIT_REV"))
+		rollbar.SetServerRoot("github.com/wcalandro/prosu-twitter")
 	}
 }
 func routeError(w http.ResponseWriter, e string, err error, rID string, code int) {
@@ -30,7 +32,7 @@ func routeError(w http.ResponseWriter, e string, err error, rID string, code int
 	}
 	if err.Error() != "User Error" {
 		if environment == "production" {
-			raven.CaptureError(err, nil)
+			rollbar.Critical(err)
 			log.Critical(err.Error())
 		} else {
 			panic(err)
@@ -43,7 +45,7 @@ func routeError(w http.ResponseWriter, e string, err error, rID string, code int
 
 func captureError(err error) {
 	if environment == "production" {
-		raven.CaptureError(err, nil)
+		rollbar.Critical(err)
 		log.Critical(err.Error())
 	} else {
 		panic(err)
