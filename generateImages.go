@@ -548,9 +548,9 @@ func generateImage(user *User, player *OsuPlayer, checks []bson.ObjectId, l pLog
 	arrow := 0
 	if difference < 0 {
 		difference *= -1
-		arrow = 1
-	} else if difference > 0 {
 		arrow = -1
+	} else if difference > 0 {
+		arrow = 1
 	} else {
 		arrow = 0
 	}
@@ -567,9 +567,9 @@ func generateImage(user *User, player *OsuPlayer, checks []bson.ObjectId, l pLog
 	difference = float64(newRankData - oldRankData)
 	if difference < 0 {
 		difference *= -1
-		arrow = 1
-	} else if difference > 0 {
 		arrow = -1
+	} else if difference > 0 {
+		arrow = 1
 	} else {
 		arrow = 0
 	}
