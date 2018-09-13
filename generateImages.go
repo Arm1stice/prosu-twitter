@@ -91,6 +91,10 @@ func init() {
 func findAndGenerate() {
 	list := []bson.ObjectId{}
 	hour := time.Now().UTC().Hour()
+	if isMaintenance {
+		gLog("Ignoring tweet posting because we are in maintenance mode")
+		return
+	}
 	gLog("Time to post tweets for hour " + strconv.Itoa(hour))
 	resultSet := connection.Collection("usermodels").Find(bson.M{"osuSettings.hourToPost": hour, "osuSettings.enabled": true})
 	number, err := CountResults(resultSet)
