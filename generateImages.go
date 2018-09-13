@@ -159,7 +159,8 @@ func findAndGenerate() {
 
 	// Time to generate
 	for _, uID := range list {
-		go updateAndPost(uID)
+		updateAndPost(uID)
+		time.Sleep(time.Duration(100) * time.Millisecond) // Sleep for 100ms after each tweet is posted
 	}
 }
 
