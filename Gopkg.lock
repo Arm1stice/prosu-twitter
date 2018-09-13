@@ -2,141 +2,182 @@
 
 
 [[projects]]
+  digest = "1:b16fbfbcc20645cb419f78325bb2e85ec729b338e996a228124d68931a6f2a37"
   name = "github.com/BurntSushi/toml"
   packages = ["."]
+  pruneopts = "UT"
   revision = "b26d9c308763d68093482582cea63d69be07a0f0"
   version = "v0.3.0"
 
 [[projects]]
+  digest = "1:2ee1ec060a2e71d2eb24755cb3f3867c52faa9895d2287d3c3bf09b01020cf32"
   name = "github.com/ChimeraCoder/anaconda"
   packages = ["."]
+  pruneopts = "UT"
   revision = "9c68684170b980d5b4c2ed08fae9b530e659904d"
   version = "v2.0.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:088fd1efa8fcd4f85c3e3c0d135f28114115517a2b215f2e39b67146d032ea33"
   name = "github.com/ChimeraCoder/tokenbucket"
   packages = ["."]
+  pruneopts = "UT"
   revision = "c5a927568de7aad8a58127d80bcd36ca4e71e454"
 
 [[projects]]
   branch = "master"
+  digest = "1:863cb3d06b96794fd14a54579116b7e704cd8bc395e9d0404a5ad236d3e198b4"
   name = "github.com/azr/backoff"
   packages = ["."]
+  pruneopts = "UT"
   revision = "53511d3c733003985b0b76f733df1f4d0095ee6a"
 
 [[projects]]
   branch = "master"
+  digest = "1:6f9339c912bbdda81302633ad7e99a28dfa5a639c864061f1929510a9a64aa74"
   name = "github.com/dustin/go-humanize"
   packages = ["."]
+  pruneopts = "UT"
   revision = "9f541cc9db5d55bce703bd99987c9d5cb8eea45e"
 
 [[projects]]
   branch = "master"
+  digest = "1:efe7dc6d12119a36c1a617b574e99ac9c5ca8fbff57eb283a60462552b7c782a"
   name = "github.com/dustin/go-jsonpointer"
   packages = ["."]
+  pruneopts = "UT"
   revision = "ba0abeacc3dcca5b9b20f31509c46794edbc9965"
 
 [[projects]]
   branch = "master"
+  digest = "1:07263fbfa1c038e890b410f730279aa7adc217180f1c2f78c6dc80b3bbe9e819"
   name = "github.com/dustin/gojson"
   packages = ["."]
+  pruneopts = "UT"
   revision = "2e71ec9dd5adce3b168cd0dbde03b5cc04951c30"
 
 [[projects]]
   branch = "master"
+  digest = "1:4f1bf78ec2d99a8cb0250987262cbfac2ee1b011a702d2bdaad9a2037cfa50f7"
   name = "github.com/flopp/go-findfont"
   packages = ["."]
+  pruneopts = "UT"
   revision = "e788239e52bccbae8c957dbc5c4daeb4fcb9c38b"
 
 [[projects]]
   branch = "master"
+  digest = "1:b5cfd8d62c46082a75974f2f5e167c272f7f7d47c7a21caf49b17a45a558a601"
   name = "github.com/garyburd/go-oauth"
   packages = ["oauth"]
+  pruneopts = "UT"
   revision = "bca2e7f09a178fd36b034107a00e2323bca6a82e"
 
 [[projects]]
+  digest = "1:0594af97b2f4cec6554086eeace6597e20a4b69466eb4ada25adf9f4300dddd2"
   name = "github.com/garyburd/redigo"
   packages = [
     "internal",
-    "redis"
+    "redis",
   ]
+  pruneopts = "UT"
   revision = "a69d19351219b6dd56f274f96d85a7014a2ec34e"
   version = "v1.6.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:e0361634f0b5e1fd3227eaec90a86bc8595cb2526e71e41bcd72b6e474e198ca"
   name = "github.com/globalsign/mgo"
   packages = [
     ".",
     "bson",
     "internal/json",
     "internal/sasl",
-    "internal/scram"
+    "internal/scram",
   ]
+  pruneopts = "UT"
   revision = "1ca0a4f7cbcbe61c005d1bd43fdd8bb8b71df6bc"
 
 [[projects]]
   branch = "master"
+  digest = "1:f43419f49ca4b6e0117d6a49054478926487ce4ec949f4ad057b623c110191d8"
   name = "github.com/go-bongo/bongo"
   packages = ["."]
+  pruneopts = "UT"
   revision = "761759e31d8fed917377aa7085db01d218ce50d8"
 
 [[projects]]
   branch = "master"
+  digest = "1:5911819b63f87b31ce5fba381922bb2849897d214d2b9b4af4ffc04e2dc8716a"
   name = "github.com/go-bongo/go-dotaccess"
   packages = ["."]
+  pruneopts = "UT"
   revision = "ae070a2d2a38fd7233e255ded21fb26fe36b4796"
 
 [[projects]]
+  digest = "1:a9fe0f8ff72c388d0128e88ce5f3c27d37dcd0950acd7cdb8323555f12463396"
   name = "github.com/go-chi/chi"
   packages = [
     ".",
-    "middleware"
+    "middleware",
   ]
+  pruneopts = "UT"
   revision = "b5294d10673813fac8558e7f47242bc9e61b4c25"
   version = "v3.3.3"
 
 [[projects]]
   branch = "master"
+  digest = "1:62c57507df491b657e9ae2645f30958d9964c8eeb380600469eedc951ebb3a0e"
   name = "github.com/golang/freetype"
   packages = [
     "raster",
-    "truetype"
+    "truetype",
   ]
+  pruneopts = "UT"
   revision = "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
 
 [[projects]]
+  digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
+  pruneopts = "UT"
   revision = "08b5f424b9271eedf6f9f0ce86cb9396ed337a42"
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:e72d1ebb8d395cf9f346fd9cbc652e5ae222dd85e0ac842dc57f175abed6d195"
   name = "github.com/gorilla/securecookie"
   packages = ["."]
+  pruneopts = "UT"
   revision = "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983"
   version = "v1.1.1"
 
 [[projects]]
+  digest = "1:0aa142ca3543fa3aca344c2fa2d52e01d706a3ce4e1fa893e0ef29b5349ddf7a"
   name = "github.com/gorilla/sessions"
   packages = ["."]
+  pruneopts = "UT"
   revision = "81547393f870a35be888759a606ba7bf71dbe5c7"
   version = "v1.1.2"
 
 [[projects]]
+  digest = "1:ecd9aa82687cf31d1585d4ac61d0ba180e42e8a6182b85bd785fcca8dfeefc1b"
   name = "github.com/joho/godotenv"
   packages = ["."]
+  pruneopts = "UT"
   revision = "23d116af351c84513e1946b527c88823e476be13"
   version = "v1.3.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:aa9d2cd5ce31eb9cfec730f15a61a0153bd9837f3c3ed8e43776f1ecceda322c"
   name = "github.com/mrjones/oauth"
   packages = ["."]
+  pruneopts = "UT"
   revision = "f4e24b6d100c9436cbfe5d439581653d455490e7"
 
 [[projects]]
+  digest = "1:01f60ec456e70c9be269902c08fa189a9d47056a419c4a91a02f19df5e36ab59"
   name = "github.com/newrelic/go-agent"
   packages = [
     ".",
@@ -145,59 +186,75 @@
     "internal/jsonx",
     "internal/logger",
     "internal/sysinfo",
-    "internal/utilization"
+    "internal/utilization",
   ]
+  pruneopts = "UT"
   revision = "46d73e6be8b4faeee70850d0df829e4fe00d6819"
   version = "v2.1.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:34534b73e925d20cc72cf202f8b482fdcbe3a1b113e19375f31aadabd0f0f97d"
   name = "github.com/nfnt/resize"
   packages = ["."]
+  pruneopts = "UT"
   revision = "83c6a9932646f83e3267f353373d47347b6036b2"
 
 [[projects]]
+  digest = "1:2c34c77bf3ec848da26e48af58fc511ed52750961fa848399d122882b8890928"
   name = "github.com/nicksnyder/go-i18n"
   packages = [
     "v2/i18n",
     "v2/internal",
-    "v2/internal/plural"
+    "v2/internal/plural",
   ]
+  pruneopts = "UT"
   revision = "a16b91a3ba80db3a2301c70d1d302d42251c9079"
   version = "v2.0.0-beta.5"
 
 [[projects]]
+  digest = "1:1919e36a53e2297eca9d3516ca358dec92257fe0de3361351e09400c91d65d5e"
   name = "github.com/oleiade/reflections"
   packages = ["."]
+  pruneopts = "UT"
   revision = "2b6ec3da648e3e834dc41bad8d9ed7f2dc6a9496"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:5b3b29ce0e569f62935d9541dff2e16cc09df981ebde48e82259076a73a3d0c7"
   name = "github.com/op/go-logging"
   packages = ["."]
+  pruneopts = "UT"
   revision = "b2cb9fa56473e98db8caba80237377e83fe44db5"
   version = "v1"
 
 [[projects]]
+  digest = "1:ed615c5430ecabbb0fb7629a182da65ecee6523900ac1ac932520860878ffcad"
   name = "github.com/robfig/cron"
   packages = ["."]
+  pruneopts = "UT"
   revision = "b41be1df696709bb6395fe435af20370037c0b4c"
   version = "v1.1"
 
 [[projects]]
+  digest = "1:8b6db3b490230af0836cd57f2da94e092ac0c2837fe24e762458006531749b53"
   name = "github.com/rollbar/rollbar-go"
   packages = ["."]
+  pruneopts = "UT"
   revision = "5f41889d7c6a59e4add07998cf776b1d335d287f"
   version = "v1.0.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:13b91a8e3f72fa9d59b7cf825de0a9d95ffdb066492d368589e878d53c306da4"
   name = "github.com/wcalandro/osuapi-go"
   packages = ["."]
+  pruneopts = "UT"
   revision = "77e922be89f60f1808f021731418d820ce1e725e"
 
 [[projects]]
   branch = "master"
+  digest = "1:c793f09249d173143b3b42e0cd0ee21a85cd976dfacc486a025aeb208c1403a8"
   name = "golang.org/x/image"
   packages = [
     "draw",
@@ -205,48 +262,85 @@
     "font/basicfont",
     "font/plan9font",
     "math/f64",
-    "math/fixed"
+    "math/fixed",
   ]
+  pruneopts = "UT"
   revision = "c73c2afc3b812cdd6385de5a50616511c4a3d458"
 
 [[projects]]
   branch = "master"
+  digest = "1:76ee51c3f468493aff39dbacc401e8831fbb765104cbf613b89bef01cf4bad70"
   name = "golang.org/x/net"
   packages = ["context"]
+  pruneopts = "UT"
   revision = "26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2"
 
 [[projects]]
+  digest = "1:17ad89bd57485e11f306d41b703f53089fb0803682707b21fe9b3b29467d37a0"
   name = "golang.org/x/text"
   packages = [
     "internal/gen",
     "internal/tag",
     "language",
-    "unicode/cldr"
+    "unicode/cldr",
   ]
+  pruneopts = "UT"
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:c9e7a4b4d47c0ed205d257648b0e5b0440880cb728506e318f8ac7cd36270bc4"
   name = "golang.org/x/time"
   packages = ["rate"]
+  pruneopts = "UT"
   revision = "fbb02b2291d28baffd63558aa44b4b56f178d650"
 
 [[projects]]
+  digest = "1:db932d4696ed23e244a69a60d258a23816aceb012a95e4c3871c711d4fc120e7"
   name = "gopkg.in/boj/redistore.v1"
   packages = ["."]
+  pruneopts = "UT"
   revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
   version = "v1.2"
 
 [[projects]]
+  digest = "1:1758e788ff491eac33104f164d720408fdd0c294c639c883350463c4435af316"
   name = "gopkg.in/fogleman/gg.v1"
   packages = ["."]
+  pruneopts = "UT"
   revision = "a9ff18eccd6d57b3c8576a71a91a04868f62078c"
   version = "v1.1.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "55a8118edac5140c61e3c2ff896608ae432c686b16bf58ce4016a33cb1713477"
+  input-imports = [
+    "github.com/BurntSushi/toml",
+    "github.com/ChimeraCoder/anaconda",
+    "github.com/dustin/go-humanize",
+    "github.com/flopp/go-findfont",
+    "github.com/globalsign/mgo/bson",
+    "github.com/go-bongo/bongo",
+    "github.com/go-chi/chi",
+    "github.com/go-chi/chi/middleware",
+    "github.com/golang/freetype/truetype",
+    "github.com/gorilla/context",
+    "github.com/gorilla/sessions",
+    "github.com/joho/godotenv",
+    "github.com/mrjones/oauth",
+    "github.com/newrelic/go-agent",
+    "github.com/nfnt/resize",
+    "github.com/nicksnyder/go-i18n/v2/i18n",
+    "github.com/op/go-logging",
+    "github.com/robfig/cron",
+    "github.com/rollbar/rollbar-go",
+    "github.com/wcalandro/osuapi-go",
+    "golang.org/x/image/font",
+    "golang.org/x/text/language",
+    "golang.org/x/time/rate",
+    "gopkg.in/boj/redistore.v1",
+    "gopkg.in/fogleman/gg.v1",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
