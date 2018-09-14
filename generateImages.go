@@ -587,9 +587,9 @@ func generateImage(user *User, player *OsuPlayer, checks []bson.ObjectId, l pLog
 	difference = float64(newPPData - oldPPData)
 	if difference < -0.01 {
 		difference *= -1
-		arrow = 1
-	} else if difference > 0.01 {
 		arrow = -1
+	} else if difference > 0.01 {
+		arrow = 1
 	} else {
 		difference = 0
 		arrow = 0
@@ -701,10 +701,10 @@ func generateImage(user *User, player *OsuPlayer, checks []bson.ObjectId, l pLog
 	newAData := newRequest.Data.Counts.A
 	oldAData := previousRequest.Data.Counts.A
 	difference = float64(newAData - oldAData)
-	if difference < 0 {
+	if difference < -0.01 {
 		difference *= -1
 		arrow = -1
-	} else if difference > 0 {
+	} else if difference > 0.01 {
 		arrow = 1
 	} else {
 		arrow = 0
