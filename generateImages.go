@@ -229,10 +229,13 @@ func updateAndPost(userID bson.ObjectId) {
 		return
 	}
 
-	l.Log("Determining if the last check was done within the last 6 hours")
-	if time.Now().Unix()-lastCheck.DateChecked > 10800 || len(checks) == 1 {
+	l.Log("Determining if the last check was done within the last 3 hours")
+
+	if time.Now().Unix()-lastCheck.DateChecked > 10800 || len(checks) == 1 || lastCheck.DateChecked > 1500000000000 {
 		if time.Now().Unix()-lastCheck.DateChecked > 10800 {
 			l.Log("Last check was made more than 3 hours ago, fetching new data")
+		} else if lastCheck.DateChecked > 1500000000000 {
+			l.Log("The last check was done on the old site")
 		} else {
 			l.Log("We only have one set of data, grabbing data again.")
 		}
