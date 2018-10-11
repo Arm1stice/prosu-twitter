@@ -189,11 +189,12 @@ func main() {
 	}
 
 	// pprof
-	r.Get("/debug/pprof/*", pprof.Index)
-	r.Get("/debug/pprof/cmdline/*", pprof.Cmdline)
-	r.Get("/debug/pprof/profile/*", pprof.Profile)
-	r.Get("/debug/pprof/symbol/*", pprof.Symbol)
-	r.Get("/debug/pprof/trace/*", pprof.Trace)
+	pr := http.NewServeMux()
+	pr.HandleFunc("/debug/pprof/", pprof.Index)
+	pr.HandleFunc("/debug/pprof/cmdline/", pprof.Cmdline)
+	pr.HandleFunc("/debug/pprof/profile/", pprof.Profile)
+	pr.HandleFunc("/debug/pprof/symbol/", pprof.Symbol)
+	pr.HandleFunc("/debug/pprof/trace/", pprof.Trace)
 
 	r.NotFound(notFound)
 
@@ -217,7 +218,11 @@ func main() {
 		port = envPort
 	}
 	defer connection.Session.Close()
-	http.ListenAndServe(":"+port, context.ClearHandler(r))
+	go (func() {
+		fmt.Println(http.ListenAndServe("localhost:5001", pr))
+	})()
+
+	fmt.Println(http.ListenAndServe(":"+port, context.ClearHandler(r)))
 }
 
 func getLoggedInValue(next http.Handler) http.Handler {
