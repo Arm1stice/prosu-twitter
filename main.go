@@ -30,6 +30,8 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/op/go-logging"
 	redistore "gopkg.in/boj/redistore.v1"
+
+	"net/http/pprof"
 )
 
 var log = logging.MustGetLogger("prosu")
@@ -185,6 +187,13 @@ func main() {
 			fmt.Fprintf(w, loaderIoKey)
 		})
 	}
+
+	// pprof
+	r.Get("/debug/pprof/*", pprof.Index)
+	r.Get("/debug/pprof/cmdline/*", pprof.Cmdline)
+	r.Get("/debug/pprof/profile/*", pprof.Profile)
+	r.Get("/debug/pprof/symbol/*", pprof.Symbol)
+	r.Get("/debug/pprof/trace/*", pprof.Trace)
 
 	r.NotFound(notFound)
 
