@@ -285,15 +285,16 @@ func updateAndPost(userID bson.ObjectId) {
 		l.Log("Last check was made less than 3 hours ago, we don't need new data. Now we can generate the image")
 	}
 	postImage, err := generateImage(prosuUser, dbOsuPlayer, checks, l)
-	var postImageBuffer bytes.Buffer
-	png.Encode(&postImageBuffer, postImage)
-	postImageBase64 := base64.StdEncoding.EncodeToString(postImageBuffer.Bytes())
-
 	if err != nil {
 		l.Error("Failed to generate image for user")
 		captureError(err)
 		return
 	}
+
+	var postImageBuffer bytes.Buffer
+	png.Encode(&postImageBuffer, postImage)
+	postImageBase64 := base64.StdEncoding.EncodeToString(postImageBuffer.Bytes())
+
 	l.Log("Image has now been generated. Testing if user's Twitter credentials are valid")
 	prosuTwitter := anaconda.NewTwitterApiWithCredentials(prosuUser.Twitter.Token, prosuUser.Twitter.TokenSecret, consumerKey, consumerSecret)
 	ok, err := prosuTwitter.VerifyCredentials()
