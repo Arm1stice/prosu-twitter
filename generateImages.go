@@ -311,7 +311,7 @@ func updateAndPost(userID bson.ObjectId) {
 			l.Error("The user's tokens have expired. Disabling tweet posting.")
 			prosuUser.OsuSettings.Enabled = false
 			saveErr := connection.Collection("usermodels").Save(prosuUser)
-			if saveErr != nil {
+			if saveErr == nil {
 				l.Error("Disabled tweeting on the user's account.")
 				return
 			}
@@ -323,7 +323,7 @@ func updateAndPost(userID bson.ObjectId) {
 			l.Error("The user's Twitter account is suspended. Disabling tweet posting.")
 			prosuUser.OsuSettings.Enabled = false
 			saveErr := connection.Collection("usermodels").Save(prosuUser)
-			if saveErr != nil {
+			if saveErr == nil {
 				l.Error("Disabled tweeting on the user's account.")
 				return
 			}
