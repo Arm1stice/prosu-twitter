@@ -300,6 +300,38 @@ func updateAndPost(userID bson.ObjectId) {
 	ok, err := prosuTwitter.VerifyCredentials()
 	if err != nil {
 		l.Error("Failed to check validity of Twitter credentials")
+		credErr := err.Error()
+
+		if strings.Contains(credErr, "\"code\":326") {
+			// Error: "To protect our users from spam and other malicious activity, this account is temporarily locked. Please log in to https://twitter.com to unlock your account."
+			l.Error("The user's account is currently locked. For now, we will just give up. In the future we should consider disabling tweets for user's who have their accounts locked too long.")
+			return
+		} else if strings.Contains(credErr, "\"code\":89") {
+			// Error: Invalid or expired token.
+			l.Error("The user's tokens have expired. Disabling tweet posting.")
+			prosuUser.OsuSettings.Enabled = false
+			saveErr := connection.Collection("usermodels").Save(prosuUser)
+			if saveErr != nil {
+				l.Error("Disabled tweeting on the user's account.")
+				return
+			}
+			l.Error("Failed to disable tweeting on the user's account")
+			captureError(saveErr)
+			return
+		} else if strings.Contains(credErr, "\"code\":64") {
+			// Error: Your account is suspended and is not permitted to access this feature.
+			l.Error("The user's Twitter account is suspended. Disabling tweet posting.")
+			prosuUser.OsuSettings.Enabled = false
+			saveErr := connection.Collection("usermodels").Save(prosuUser)
+			if saveErr != nil {
+				l.Error("Disabled tweeting on the user's account.")
+				return
+			}
+			l.Error("Failed to disable tweeting on the user's account")
+			captureError(saveErr)
+			return
+		}
+
 		captureError(err)
 		return
 	}
@@ -404,11 +436,20 @@ func createRequest(dbID bson.ObjectId, data *osuapi.User) *OsuRequest {
 func getAvatar(userID string) (image.Image, error) {
 	res, err := http.Get("https://a.ppy.sh/" + userID)
 	if err != nil {
-		return nil, err
+		file, err := ioutil.ReadFile("./assets/modes/avatar-guest.png")
+		if err != nil {
+			return nil, err
+		}
+		img, _, err := image.Decode(bytes.NewReader(file))
+		if err != nil {
+			return nil, err
+		}
+		return img, nil
 	}
 	defer res.Body.Close()
 	img, _, err := image.Decode(res.Body)
 	if err != nil {
+		// TODO: Rather than just returning an error, we should be returning the guest avatar!
 		return nil, err
 	}
 	return img, nil
