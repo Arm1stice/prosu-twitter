@@ -436,11 +436,20 @@ func createRequest(dbID bson.ObjectId, data *osuapi.User) *OsuRequest {
 func getAvatar(userID string) (image.Image, error) {
 	res, err := http.Get("https://a.ppy.sh/" + userID)
 	if err != nil {
-		return nil, err
+		file, err := ioutil.ReadFile("./assets/modes/avatar-guest.png")
+		if err != nil {
+			return nil, err
+		}
+		img, _, err := image.Decode(bytes.NewReader(file))
+		if err != nil {
+			return nil, err
+		}
+		return img, nil
 	}
 	defer res.Body.Close()
 	img, _, err := image.Decode(res.Body)
 	if err != nil {
+		// TODO: Rather than just returning an error, we should be returning the guest avatar!
 		return nil, err
 	}
 	return img, nil
