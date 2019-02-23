@@ -301,7 +301,7 @@ func updateAndPost(userID bson.ObjectId) {
 	if err != nil {
 		l.Error("Failed to check validity of Twitter credentials")
 		credErr := err.Error()
-
+		l.Error("CREDENTIAL ERROR: " + credErr)
 		if strings.Contains(credErr, "\"code\":326") || strings.Contains(credErr, "To protect our users from spam and other malicious activity") {
 			// Error: "To protect our users from spam and other malicious activity, this account is temporarily locked. Please log in to https://twitter.com to unlock your account."
 			l.Error("The user's account is currently locked. For now, we will just give up. In the future we should consider disabling tweets for user's who have their accounts locked too long.")
@@ -318,7 +318,7 @@ func updateAndPost(userID bson.ObjectId) {
 			l.Error("Failed to disable tweeting on the user's account")
 			captureError(saveErr)
 			return
-		} else if strings.Contains(credErr, "\"code\":64") {
+		} else if strings.Contains(credErr, "\"code\":64") || strings.Contains(credErr, "suspended") {
 			// Error: Your account is suspended and is not permitted to access this feature.
 			l.Error("The user's Twitter account is suspended. Disabling tweet posting.")
 			prosuUser.OsuSettings.Enabled = false
