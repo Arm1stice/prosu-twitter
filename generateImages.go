@@ -302,7 +302,7 @@ func updateAndPost(userID bson.ObjectId) {
 		l.Error("Failed to check validity of Twitter credentials")
 		credErr := err.Error()
 
-		if strings.Contains(credErr, "\"code\":326") {
+		if strings.Contains(credErr, "\"code\":326") || strings.Contains(credErr, "To protect our users from spam and other malicious activity") {
 			// Error: "To protect our users from spam and other malicious activity, this account is temporarily locked. Please log in to https://twitter.com to unlock your account."
 			l.Error("The user's account is currently locked. For now, we will just give up. In the future we should consider disabling tweets for user's who have their accounts locked too long.")
 			return
