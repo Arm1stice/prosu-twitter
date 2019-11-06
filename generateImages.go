@@ -471,10 +471,12 @@ func getAvatar(userID string) (image.Image, error) {
 	if err != nil {
 		file, err := ioutil.ReadFile("./assets/modes/avatar-guest.png")
 		if err != nil {
+			log.Critical("Failed to read avatar-guest image!")
 			return nil, err
 		}
 		img, _, err := image.Decode(bytes.NewReader(file))
 		if err != nil {
+			log.Critical("Failed to decode avatar-guest image!")
 			return nil, err
 		}
 		return img, nil
@@ -483,6 +485,7 @@ func getAvatar(userID string) (image.Image, error) {
 	img, _, err := image.Decode(res.Body)
 	if err != nil {
 		// TODO: Rather than just returning an error, we should be returning the guest avatar!
+		log.Critical("Failed to decode user's avatar!")
 		return nil, err
 	}
 	return img, nil
