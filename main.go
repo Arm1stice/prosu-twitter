@@ -199,7 +199,7 @@ func main() {
 	r.NotFound(notFound)
 
 	// Set up translator
-	bundle = &i18n.Bundle{DefaultLanguage: language.English}
+	bundle = i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 
 	bundle.MustLoadMessageFile("./translations/active.en.toml")
