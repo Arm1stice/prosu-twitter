@@ -30,6 +30,7 @@ import (
 )
 
 var arialFont20, arialFont12, arialFont18, arialBold20 font.Face
+var guestAvatar image.Image
 
 func gLog(msg string) {
 	log.Info("[TWEET GENERATION] " + msg)
@@ -85,6 +86,17 @@ func init() {
 	arialBold20 = truetype.NewFace(arial, &truetype.Options{
 		Size: 20,
 	})
+
+	// Load guest avatar
+	guestAvatarFile, err := ioutil.ReadFile("./assets/modes/avatar-guest.png")
+	if err != nil {
+		panic(err)
+	}
+
+	guestAvatar, _, err = image.Decode(bytes.NewReader(guestAvatarFile))
+	if err != nil {
+		panic(err)
+	}
 }
 
 // Find and generate finds all users that we should be generating for and generates and posts images for them
@@ -469,17 +481,8 @@ func createRequest(dbID bson.ObjectId, data *osuapi.User) *OsuRequest {
 func getAvatar(userID string) (image.Image, error) {
 	res, err := http.Get("https://a.ppy.sh/" + userID)
 	if err != nil {
-		file, err := ioutil.ReadFile("./assets/modes/avatar-guest.png")
-		if err != nil {
-			log.Critical("Failed to read avatar-guest image!")
-			return nil, err
-		}
-		img, _, err := image.Decode(bytes.NewReader(file))
-		if err != nil {
-			log.Critical("Failed to decode avatar-guest image!")
-			return nil, err
-		}
-		return img, nil
+		log.Critical("Couldn't get users' avatar! Returning guest avatar. URL: %s", "https://a.ppy.sh/"+userID)
+		return guestAvatar, nil
 	}
 	defer res.Body.Close()
 	img, _, err := image.Decode(res.Body)
