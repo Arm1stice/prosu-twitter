@@ -201,7 +201,7 @@
   revision = "83c6a9932646f83e3267f353373d47347b6036b2"
 
 [[projects]]
-  digest = "1:c0feb3014ad00e3c2fc6a59fa6448f2a59f6a6bc2a0c7f026939a7a8a50792cb"
+  digest = "1:9ec326968a90b62ddaf7696f3c0381102be1c9a2330e7460d4e61785542c1947"
   name = "github.com/nicksnyder/go-i18n"
   packages = [
     "v2/i18n",
@@ -209,8 +209,8 @@
     "v2/internal/plural",
   ]
   pruneopts = "UT"
-  revision = "9c0db6e2b3a591b2dfabb8ef487e53cd080c57bf"
-  version = "v2.0.0-beta.6"
+  revision = "0c6ce6ac1e8c119993c3d5638af4f7cd67ff068a"
+  version = "v2.0.2"
 
 [[projects]]
   digest = "1:1919e36a53e2297eca9d3516ca358dec92257fe0de3361351e09400c91d65d5e"
