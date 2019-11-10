@@ -488,8 +488,8 @@ func getAvatar(userID string) (image.Image, error) {
 	img, _, err := image.Decode(res.Body)
 	if err != nil {
 		// TODO: Rather than just returning an error, we should be returning the guest avatar!
-		log.Critical("Failed to decode user's avatar!")
-		return nil, err
+		log.Critical("Failed to decode user's avatar! Links: https://a.ppy.sh/" + userID)
+		return guestAvatar, nil
 	}
 	return img, nil
 }
