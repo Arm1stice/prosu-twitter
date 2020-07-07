@@ -6,7 +6,7 @@ WORKDIR /go/src/github.com/Arm1stice/prosu-twitter
 COPY . /go/src/github.com/Arm1stice/prosu-twitter
 COPY CHECKS /app/CHECKS
 
-RUN go mod vendor
+RUN dep ensure -vendor-only
 RUN go build
 
 ENTRYPOINT [ "./prosu-twitter" ]
