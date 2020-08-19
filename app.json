@@ -5,7 +5,7 @@
     "prosu",
     "twitter"
   ],
-  "website": "https://twitter.prosu.xyz/",
+  "website": "https://prosu.xyz/",
   "dokku":{
     "plugins":[
       "mongo","redis"

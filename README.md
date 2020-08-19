@@ -1,7 +1,7 @@
 Prosu for Twitter
 =================
 The full rewrite of [Prosu](https://github.com/wcalandro/prosu)  
-This is live at [https://twitter.prosu.xyz](https://twitter.prosu.xyz)
+This is live at [https://prosu.xyz](https://prosu.xyz)
 
 I learned Go during the summer, and was inspired to rewrite Prosu as my summer project.  
 The end result is a website that runs faster with only half the RAM usage. (~125MB avg -> ~50MB avg)
