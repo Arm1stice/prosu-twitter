@@ -217,7 +217,7 @@
   name = "github.com/oleiade/reflections"
   packages = ["."]
   pruneopts = "UT"
-  revision = "2b6ec3da648e3e834dc41bad8d9ed7f2dc6a9496"
+  revision = "c4f693a9d46ca0e8ac8e209ec00df181ba3d493b"
   version = "v1.0.1"
 
 [[projects]]
